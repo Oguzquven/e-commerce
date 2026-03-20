@@ -5,6 +5,8 @@ import womenImage from "../assets/images/WOMEN.jpg";
 import accessoriesImage from "../assets/images/ACCESSORIES.jpg";
 import kidsImage from "../assets/images/KIDS.jpg";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import BestsellerProducts from "../components/BestsellerProducts";
+import VitaClassicProduct from "../components/VitaClassicProduct";
 
 function HomePage() {
   const heroRef = useRef(null);
@@ -101,7 +103,6 @@ function HomePage() {
           height: heroHeight,
         }}
       >
-        {/* ... Hero içeriği aynı ... */}
         <div className="absolute inset-0 w-full h-full">
           {slides.map((slide, index) => (
             <div
@@ -245,7 +246,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* EDITOR'S PICK SECTION - SABİT 1050px */}
+      {/* EDITOR'S PICK SECTION */}
       <section className="bg-white">
         <div
           className="mx-auto px-4"
@@ -255,7 +256,6 @@ function HomePage() {
             paddingBottom: "80px",
           }}
         >
-          {/* Başlık */}
           <div className="text-center mb-12">
             <h3 className="text-2xl font-bold text-[#252B42] mb-2 tracking-wide">
               EDITOR'S PICK
@@ -265,9 +265,7 @@ function HomePage() {
             </p>
           </div>
 
-          {/* Desktop Grid - SABİT ÖLÇÜLER */}
           <div className="hidden lg:flex gap-4 justify-center">
-            {/* MEN - 510x500 */}
             <div
               className="relative group cursor-pointer overflow-hidden flex-shrink-0"
               style={{ width: "510px", height: "500px" }}
@@ -283,7 +281,6 @@ function HomePage() {
               </button>
             </div>
 
-            {/* WOMEN - 240x500 */}
             <div
               className="relative group cursor-pointer overflow-hidden flex-shrink-0"
               style={{ width: "240px", height: "500px" }}
@@ -299,12 +296,10 @@ function HomePage() {
               </button>
             </div>
 
-            {/* Sağ taraf - ACCESSORIES + KIDS */}
             <div
               className="flex flex-col gap-4 flex-shrink-0"
               style={{ width: "240px", height: "500px" }}
             >
-              {/* ACCESSORIES - 240x242 */}
               <div
                 className="relative group cursor-pointer overflow-hidden"
                 style={{ width: "240px", height: "242px" }}
@@ -320,7 +315,6 @@ function HomePage() {
                 </button>
               </div>
 
-              {/* KIDS - 240x242 */}
               <div
                 className="relative group cursor-pointer overflow-hidden"
                 style={{ width: "240px", height: "242px" }}
@@ -338,9 +332,7 @@ function HomePage() {
             </div>
           </div>
 
-          {/* Tablet/Mobile Grid */}
           <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* MEN */}
             <div className="relative group cursor-pointer overflow-hidden h-[300px] sm:h-[400px]">
               <img
                 src={menImage}
@@ -353,7 +345,6 @@ function HomePage() {
               </button>
             </div>
 
-            {/* WOMEN */}
             <div className="relative group cursor-pointer overflow-hidden h-[300px] sm:h-[400px]">
               <img
                 src={womenImage}
@@ -366,7 +357,6 @@ function HomePage() {
               </button>
             </div>
 
-            {/* ACCESSORIES */}
             <div className="relative group cursor-pointer overflow-hidden h-[200px] sm:h-[250px]">
               <img
                 src={accessoriesImage}
@@ -379,7 +369,6 @@ function HomePage() {
               </button>
             </div>
 
-            {/* KIDS */}
             <div className="relative group cursor-pointer overflow-hidden h-[200px] sm:h-[250px]">
               <img
                 src={kidsImage}
@@ -394,6 +383,10 @@ function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* BESTSELLER PRODUCTS - AYRI COMPONENT OLARAK EKLENDİ */}
+      <BestsellerProducts />
+      <VitaClassicProduct />
     </div>
   );
 }
