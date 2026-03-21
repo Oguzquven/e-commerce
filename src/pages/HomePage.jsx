@@ -7,6 +7,7 @@ import kidsImage from "../assets/images/KIDS.jpg";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import BestsellerProducts from "../components/BestsellerProducts";
 import VitaClassicProduct from "../components/VitaClassicProduct";
+import NeuralUniverse from "../components/NeuralUniverse";
 
 function HomePage() {
   const heroRef = useRef(null);
@@ -387,6 +388,7 @@ function HomePage() {
       {/* BESTSELLER PRODUCTS - AYRI COMPONENT OLARAK EKLENDİ */}
       <BestsellerProducts />
       <VitaClassicProduct />
+      <NeuralUniverse />
     </div>
   );
 }
