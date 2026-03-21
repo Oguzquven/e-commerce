@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import BestsellerProducts from "../components/BestsellerProducts";
 import VitaClassicProduct from "../components/VitaClassicProduct";
 import NeuralUniverse from "../components/NeuralUniverse";
+import FeaturedPosts from "../components/FeaturedPosts";
 
 function HomePage() {
   const heroRef = useRef(null);
@@ -385,10 +386,10 @@ function HomePage() {
         </div>
       </section>
 
-      {/* BESTSELLER PRODUCTS - AYRI COMPONENT OLARAK EKLENDİ */}
       <BestsellerProducts />
       <VitaClassicProduct />
       <NeuralUniverse />
+      <FeaturedPosts />
     </div>
   );
 }
