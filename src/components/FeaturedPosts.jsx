@@ -39,47 +39,47 @@ const posts = [
 
 const FeaturedPosts = () => {
   return (
-    <section className="w-full bg-white py-20">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="w-full bg-white py-16 md:py-0 md:min-h-screen md:flex md:items-center md:justify-center">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Başlık */}
-        <div className="text-center mb-16">
-          <span className="text-[#23A6F0] font-bold text-sm uppercase tracking-wide">
+        <div className="text-center mb-10 md:mb-12 lg:mb-16 px-4 sm:px-8">
+          <span className="text-[#23A6F0] font-bold text-sm uppercase tracking-wide block mb-4">
             Practice Advice
           </span>
-          <h2 className="text-[#252B42] text-3xl md:text-4xl font-bold mt-2 mb-4">
-            Featured Posts
+          <h2 className="text-[#252B42] text-4xl sm:text-5xl md:text-3xl lg:text-4xl font-bold mb-6 leading-tight">
+            Featured
+            <br className="md:hidden" /> Posts
           </h2>
-          <p className="text-[#737373] max-w-md mx-auto">
-            Problems trying to resolve the conflict between
-            <br className="hidden sm:block" />
-            the two major realms of Classical physics: Newtonian mechanics
+          <p className="text-[#737373] max-w-[340px] sm:max-w-[450px] md:max-w-lg mx-auto text-sm md:text-base px-2 sm:px-4 leading-relaxed">
+            Problems trying to resolve the conflict between the two major realms
+            of Classical physics: Newtonian mechanics
           </p>
         </div>
 
-        {/* Kartlar */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Tüm kartlar - Mobilde dikey, Desktop'ta yatay */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-4 lg:gap-6">
           {posts.map((post) => (
             <article
               key={post.id}
-              className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300"
+              className="bg-white shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 ease-out flex flex-col max-w-sm mx-auto md:max-w-none w-full cursor-pointer group"
             >
               {/* Görsel */}
-              <div className="relative h-64 overflow-hidden">
+              <div className="relative h-56 md:h-40 lg:h-48 overflow-hidden flex-shrink-0">
                 <img
                   src={post.image}
                   alt={post.title}
-                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
                 />
                 {/* NEW Badge */}
-                <span className="absolute top-4 left-4 bg-[#E74040] text-white text-xs font-bold px-3 py-1 rounded">
+                <span className="absolute top-4 left-4 bg-[#E74040] text-white text-xs font-bold px-3 py-1 rounded group-hover:animate-pulse">
                   NEW
                 </span>
               </div>
 
               {/* İçerik */}
-              <div className="p-6">
+              <div className="p-5 md:p-4 lg:p-6 flex flex-col flex-grow">
                 {/* Tags */}
-                <div className="flex gap-3 mb-3">
+                <div className="flex flex-wrap gap-2 mb-3 md:mb-2">
                   {post.tags.map((tag, index) => (
                     <span
                       key={index}
@@ -93,17 +93,17 @@ const FeaturedPosts = () => {
                 </div>
 
                 {/* Başlık */}
-                <h3 className="text-[#252B42] text-xl font-bold mb-3 leading-tight">
+                <h3 className="text-[#252B42] text-lg md:text-base lg:text-xl font-bold mb-2 md:mb-2 leading-tight group-hover:text-[#23A6F0] transition-colors duration-300">
                   {post.title}
                 </h3>
 
                 {/* Açıklama */}
-                <p className="text-[#737373] text-sm mb-4 leading-relaxed">
+                <p className="text-[#737373] text-sm mb-4 md:mb-3 leading-relaxed flex-grow">
                   {post.description}
                 </p>
 
                 {/* Tarih ve Yorum */}
-                <div className="flex items-center justify-between text-xs text-[#737373] mb-4">
+                <div className="flex items-center justify-between text-xs text-[#737373] mb-4 md:mb-3">
                   <div className="flex items-center gap-1">
                     <svg
                       className="w-4 h-4"
@@ -141,11 +141,11 @@ const FeaturedPosts = () => {
                 {/* Learn More Link */}
                 <a
                   href="#"
-                  className="inline-flex items-center text-[#737373] text-sm font-bold hover:text-[#23A6F0] transition-colors"
+                  className="inline-flex items-center text-[#737373] text-sm font-bold hover:text-[#23A6F0] transition-colors mt-auto group-hover:translate-x-1 transition-transform duration-300"
                 >
                   Learn More
                   <svg
-                    className="w-4 h-4 ml-1"
+                    className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
