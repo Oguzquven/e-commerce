@@ -1,16 +1,17 @@
+import { BrowserRouter } from "react-router-dom";
 import Header from "./layout/Header";
-import HomePage from "./pages/HomePage";
+import PageContent from "./layout/PageContent";
 import Footer from "./layout/Footer";
 
 function App() {
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
-      <main>
-        <HomePage />
-      </main>
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <div className="min-h-screen bg-white">
+        <Header />
+        <PageContent />
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
 
