@@ -1,6 +1,7 @@
 import React from "react";
 import ShopBanner from "../components/ShopBanner";
 import ShopProductList from "../components/ShopProductList";
+import ClientLogos from '../components/ClientLogos';
 
 const ShopPage = () => {
   return (
@@ -26,6 +27,7 @@ const ShopPage = () => {
 
       <ShopBanner />
       <ShopProductList />
+      <ClientLogos />
     </div>
   );
 };
