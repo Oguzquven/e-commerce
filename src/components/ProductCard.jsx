@@ -1,11 +1,21 @@
-function ProductCard({ image, title, department, price, salePrice, colors }) {
+import { Link } from "react-router-dom";
+
+function ProductCard({
+  id = 1,
+  image,
+  title,
+  department,
+  price,
+  salePrice,
+  colors,
+}) {
   return (
-    <div className="flex flex-col gap-2 w-full">
+    <Link to={`/product/${id}`} className="flex flex-col gap-2 w-full group">
       <div className="overflow-hidden">
         <img
           src={image}
           alt={title}
-          className="w-full h-64 object-cover hover:scale-105 transition-transform duration-300"
+          className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
         />
       </div>
       <div className="flex flex-col gap-1 px-1">
@@ -27,7 +37,7 @@ function ProductCard({ image, title, department, price, salePrice, colors }) {
           </div>
         )}
       </div>
-    </div>
+    </Link>
   );
 }
 

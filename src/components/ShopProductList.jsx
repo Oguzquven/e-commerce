@@ -7,455 +7,8 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-
-// Toplam 45 ürün (3 sayfa x 15 ürün) - 15 tam bölünür, 5 ürün x 3 satır
-const allProducts = [
-  // Sayfa 1 - 15 ürün
-  {
-    id: 1,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image: "/src/assets/images/pictures1.jpg",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 2,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image: "/src/assets/images/pictures2.jpg",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 3,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image: "/src/assets/images/pictures3.jpg",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 4,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image: "/src/assets/images/pictures4.jpg",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 5,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image: "/src/assets/images/pictures5.jpg",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 6,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image: "/src/assets/images/pictures6.jpg",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 7,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image: "/src/assets/images/pictures7.jpg",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 8,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image: "/src/assets/images/pictures8.jpg",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 9,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 10,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 11,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 12,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 13,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 14,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 15,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  // Sayfa 2 - 15 ürün
-  {
-    id: 16,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 17,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 18,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 19,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 20,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 21,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1571455786673-9d9d6c194f90?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 22,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 23,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 24,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 25,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1516762689617-e1cffcef479d?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 26,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 27,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 28,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 29,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1475180098004-ca77a66827be?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 30,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  // Sayfa 3 - 15 ürün
-  {
-    id: 31,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 32,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1495385794356-15371f348c31?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 33,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1504194921103-f8b80cadd5e4?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 34,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 35,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1467043237213-65f2da53396f?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 36,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 37,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 38,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 39,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 40,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 41,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1516762689617-e1cffcef479d?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 42,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 43,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 44,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-  {
-    id: 45,
-    title: "Graphic Design",
-    department: "English Department",
-    oldPrice: "$16.48",
-    newPrice: "$6.48",
-    image:
-      "https://images.unsplash.com/photo-1475180098004-ca77a66827be?w=400&h=500&fit=crop",
-    colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-  },
-];
+import { Link } from "react-router-dom";
+import { getAllProducts } from "../data/products";
 
 // Ürün Kartı Componenti - Figma ölçüleri: 238 x 488 Hug
 const ProductCard = ({ product, index, viewMode }) => {
@@ -465,7 +18,8 @@ const ProductCard = ({ product, index, viewMode }) => {
   // Grid görünümü - Figma: 238 x 488 Hug
   if (viewMode === "grid") {
     return (
-      <div
+      <Link
+        to={`/product/${product.id}`}
         className="flex flex-col w-[238px] group cursor-pointer"
         style={{
           animation: `fadeInUp 0.6s ease-out ${index * 0.05}s both`,
@@ -486,7 +40,10 @@ const ProductCard = ({ product, index, viewMode }) => {
                 : "opacity-0 translate-y-4"
             }`}
           >
-            <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#23A6F0] hover:text-white transition-all duration-300 hover:scale-110 cursor-pointer">
+            <button
+              className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#23A6F0] hover:text-white transition-all duration-300 hover:scale-110 cursor-pointer"
+              onClick={(e) => e.preventDefault()}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -501,7 +58,10 @@ const ProductCard = ({ product, index, viewMode }) => {
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
               </svg>
             </button>
-            <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#23A6F0] hover:text-white transition-all duration-300 hover:scale-110 cursor-pointer">
+            <button
+              className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#23A6F0] hover:text-white transition-all duration-300 hover:scale-110 cursor-pointer"
+              onClick={(e) => e.preventDefault()}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -518,7 +78,10 @@ const ProductCard = ({ product, index, viewMode }) => {
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
               </svg>
             </button>
-            <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#23A6F0] hover:text-white transition-all duration-300 hover:scale-110 cursor-pointer">
+            <button
+              className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#23A6F0] hover:text-white transition-all duration-300 hover:scale-110 cursor-pointer"
+              onClick={(e) => e.preventDefault()}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -576,7 +139,10 @@ const ProductCard = ({ product, index, viewMode }) => {
             {product.colors.map((color, colorIndex) => (
               <div
                 key={colorIndex}
-                onClick={() => setSelectedColor(colorIndex)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSelectedColor(colorIndex);
+                }}
                 className={`w-4 h-4 rounded-full cursor-pointer transition-all duration-300 hover:scale-125 ${
                   selectedColor === colorIndex
                     ? "ring-2 ring-offset-2 ring-[#252B42] scale-110"
@@ -593,13 +159,14 @@ const ProductCard = ({ product, index, viewMode }) => {
             ))}
           </div>
         </div>
-      </div>
+      </Link>
     );
   }
 
   // Liste görünümü - Yan yana düzen
   return (
-    <div
+    <Link
+      to={`/product/${product.id}`}
       className="flex flex-col sm:flex-row gap-4 p-4 bg-white rounded-lg shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group"
       style={{
         animation: `fadeInUp 0.6s ease-out ${index * 0.05}s both`,
@@ -656,10 +223,16 @@ const ProductCard = ({ product, index, viewMode }) => {
 
         {/* List için butonlar */}
         <div className="flex gap-3">
-          <button className="px-6 py-2 bg-[#23A6F0] text-white text-sm font-bold rounded hover:bg-[#1a8cd4] transition-all duration-300 hover:scale-105 cursor-pointer">
+          <button
+            className="px-6 py-2 bg-[#23A6F0] text-white text-sm font-bold rounded hover:bg-[#1a8cd4] transition-all duration-300 hover:scale-105 cursor-pointer"
+            onClick={(e) => e.preventDefault()}
+          >
             Add to Cart
           </button>
-          <button className="w-10 h-10 border border-[#E8E8E8] rounded-full flex items-center justify-center hover:bg-[#23A6F0] hover:text-white hover:border-[#23A6F0] transition-all duration-300 cursor-pointer">
+          <button
+            className="w-10 h-10 border border-[#E8E8E8] rounded-full flex items-center justify-center hover:bg-[#23A6F0] hover:text-white hover:border-[#23A6F0] transition-all duration-300 cursor-pointer"
+            onClick={(e) => e.preventDefault()}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -676,7 +249,7 @@ const ProductCard = ({ product, index, viewMode }) => {
           </button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
@@ -684,8 +257,11 @@ const ShopProductList = () => {
   const [viewMode, setViewMode] = useState("grid");
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Merkezi veri kaynağından tüm ürünleri al
+  const allProducts = getAllProducts();
+
   const itemsPerPage = 15; // Her sayfada 15 ürün (5 x 3 = 15, tam bölünür)
-  const totalPages = 3; // Toplam 3 sayfa = 45 ürün
+  const totalPages = Math.ceil(allProducts.length / itemsPerPage);
 
   const currentProducts = allProducts.slice(
     (currentPage - 1) * itemsPerPage,
@@ -766,11 +342,7 @@ const ShopProductList = () => {
           </div>
         </div>
 
-        {/* 
-          Products Grid - Her satırda 5 ürün (15 ürün / 3 satır)
-          Grid: CSS Grid ile 5 kolon, gap-[30px]
-          List: Alt alta tam genişlik
-        */}
+        {/* Products Grid */}
         <div
           className={`${
             viewMode === "grid"
@@ -803,17 +375,17 @@ const ShopProductList = () => {
               <ChevronLeft className="w-5 h-5" />
             </button>
 
-            {[1, 2, 3].map((page) => (
+            {[...Array(totalPages)].map((_, i) => (
               <button
-                key={page}
-                onClick={() => setCurrentPage(page)}
+                key={i + 1}
+                onClick={() => setCurrentPage(i + 1)}
                 className={`w-10 h-10 flex items-center justify-center rounded font-bold text-sm transition-all duration-300 cursor-pointer ${
-                  currentPage === page
+                  currentPage === i + 1
                     ? "bg-[#23A6F0] text-white"
                     : "border border-[#E8E8E8] text-[#23A6F0] hover:bg-[#23A6F0] hover:text-white hover:border-[#23A6F0]"
                 }`}
               >
-                {page}
+                {i + 1}
               </button>
             ))}
 
