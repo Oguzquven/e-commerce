@@ -1,6 +1,5 @@
 // src/components/NeuralUniverse.jsx
 import React, { useEffect, useRef, useState } from "react";
-import images2 from "../assets/images/images2.png";
 
 const NeuralUniverse = () => {
   const sectionRef = useRef(null);
@@ -39,7 +38,7 @@ const NeuralUniverse = () => {
           }`}
         >
           <img
-            src={images2}
+            src="/images/images2.png"
             alt="Neural Universe"
             className="w-full h-full object-cover object-[70%_top] lg:object-cover transition-transform duration-700 hover:scale-105 lg:hover:scale-110"
           />

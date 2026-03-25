@@ -1,13 +1,10 @@
 // src/components/FeaturedPosts.jsx
 import React from "react";
-import pic1 from "../assets/images/pic1.jpg";
-import pic2 from "../assets/images/pic2.jpg";
-import pic3 from "../assets/images/pic3.jpg";
 
 const posts = [
   {
     id: 1,
-    image: pic1,
+    image: "/images/pic1.jpg",
     tags: ["Google", "Trending", "New"],
     title: "Loudest à la Madison #1 (L'intégral)",
     description:
@@ -17,7 +14,7 @@ const posts = [
   },
   {
     id: 2,
-    image: pic2,
+    image: "/images/pic2.jpg",
     tags: ["Google", "Trending", "New"],
     title: "Loudest à la Madison #1 (L'intégral)",
     description:
@@ -27,7 +24,7 @@ const posts = [
   },
   {
     id: 3,
-    image: pic3,
+    image: "/images/pic3.jpg",
     tags: ["Google", "Trending", "New"],
     title: "Loudest à la Madison #1 (L'intégral)",
     description:

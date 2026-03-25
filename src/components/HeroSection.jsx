@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-import heroImage from "../assets/images/hero-woman.jpg";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const HeroSection = () => {
@@ -95,7 +94,7 @@ const HeroSection = () => {
           >
             <div className="absolute inset-0 w-full h-full overflow-hidden">
               <img
-                src={heroImage}
+                src="/images/hero-woman.jpg"
                 alt="New Collection"
                 className={`w-full h-full object-cover transition-transform duration-[2000ms] ease-out ${
                   index === currentSlide ? "scale-100" : "scale-110"
