@@ -7,7 +7,7 @@ export const allProducts = [
     department: "English Department",
     oldPrice: "$16.48",
     newPrice: "$6.48",
-    image: "/src/assets/images/pictures1.jpg",
+    image: "/images/pictures1.jpg",
     colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
     description:
       "Premium quality graphic design t-shirt with modern print. Made from 100% cotton for maximum comfort.",
@@ -22,7 +22,7 @@ export const allProducts = [
     department: "Fashion Department",
     oldPrice: "$24.99",
     newPrice: "$12.99",
-    image: "/src/assets/images/pictures2.jpg",
+    image: "/images/pictures2.jpg",
     colors: ["#E77C40", "#252B42", "#23A6F0"],
     description:
       "Light and breezy summer dress perfect for warm days. Elegant design with comfortable fit.",
@@ -37,7 +37,7 @@ export const allProducts = [
     department: "Men's Department",
     oldPrice: "$89.99",
     newPrice: "$45.99",
-    image: "/src/assets/images/pictures3.jpg",
+    image: "/images/pictures3.jpg",
     colors: ["#252B42", "#737373"],
     description:
       "Timeless denim jacket with classic cut. Durable material that gets better with age.",
@@ -52,7 +52,7 @@ export const allProducts = [
     department: "Sports Department",
     oldPrice: "$120.00",
     newPrice: "$79.99",
-    image: "/src/assets/images/pictures4.jpg",
+    image: "/images/pictures4.jpg",
     colors: ["#23A6F0", "#23856D", "#E77C40"],
     description:
       "High-performance running shoes with advanced cushioning technology. Perfect for marathon training.",
@@ -67,7 +67,7 @@ export const allProducts = [
     department: "Accessories",
     oldPrice: "$150.00",
     newPrice: "$89.99",
-    image: "/src/assets/images/pictures5.jpg",
+    image: "/images/pictures5.jpg",
     colors: ["#252B42", "#E77C40", "#737373"],
     description:
       "Genuine leather handbag with multiple compartments. Stylish and practical for everyday use.",
@@ -82,7 +82,7 @@ export const allProducts = [
     department: "Women's Department",
     oldPrice: "$199.99",
     newPrice: "$129.99",
-    image: "/src/assets/images/pictures6.jpg",
+    image: "/images/pictures6.jpg",
     colors: ["#252B42", "#737373", "#E77C40"],
     description:
       "Warm wool coat for cold winter days. Classic design that never goes out of style.",
@@ -97,7 +97,7 @@ export const allProducts = [
     department: "Men's Department",
     oldPrice: "$35.00",
     newPrice: "$19.99",
-    image: "/src/assets/images/pictures7.jpg",
+    image: "/images/pictures7.jpg",
     colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
     description:
       "Classic polo shirt made from premium cotton. Perfect for casual and semi-formal occasions.",
@@ -112,7 +112,7 @@ export const allProducts = [
     department: "Sports Department",
     oldPrice: "$45.00",
     newPrice: "$28.99",
-    image: "/src/assets/images/pictures8.jpg",
+    image: "/images/pictures8.jpg",
     colors: ["#252B42", "#23A6F0", "#23856D"],
     description:
       "High-waist yoga leggings with moisture-wicking fabric. Stretchy and comfortable for any workout.",
