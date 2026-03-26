@@ -5,23 +5,23 @@ const ClientLogos = () => {
   const logos = [
     {
       name: "hooli",
-      src: "/src/assets/images/fa-brands-1.png",
+      src: "/images/fa-brands-1.png",
     },
     {
       name: "lyft",
-      src: "/src/assets/images/fa-brands-2.png",
+      src: "/images/fa-brands-2.png",
     },
     {
       name: "leaf",
-      src: "/src/assets/images/fa-brands-3.png",
+      src: "/images/fa-brands-3.png",
     },
     {
       name: "stripe",
-      src: "/src/assets/images/fa-brands-4.png",
+      src: "/images/fa-brands-4.png",
     },
     {
       name: "aws",
-      src: "/src/assets/images/fa-brands-5.png",
+      src: "/images/fa-brands-5.png",
     },
     {
       name: "reddit",
