@@ -1,8 +1,3 @@
-import menImage from "../assets/images/MEN.jpg";
-import womenImage from "../assets/images/WOMEN.jpg";
-import accessoriesImage from "../assets/images/ACCESSORIES.jpg";
-import kidsImage from "../assets/images/KIDS.jpg";
-
 const EditorsPick = () => {
   return (
     <section className="bg-white">
@@ -30,7 +25,7 @@ const EditorsPick = () => {
             style={{ width: "510px", height: "500px" }}
           >
             <img
-              src={menImage}
+              src="/images/MEN.jpg"
               alt="MEN"
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
@@ -45,7 +40,7 @@ const EditorsPick = () => {
             style={{ width: "240px", height: "500px" }}
           >
             <img
-              src={womenImage}
+              src="/images/WOMEN.jpg"
               alt="WOMEN"
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
@@ -64,7 +59,7 @@ const EditorsPick = () => {
               style={{ width: "240px", height: "242px" }}
             >
               <img
-                src={accessoriesImage}
+                src="/images/ACCESSORIES.jpg"
                 alt="ACCESSORIES"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
@@ -78,7 +73,7 @@ const EditorsPick = () => {
               style={{ width: "240px", height: "242px" }}
             >
               <img
-                src={kidsImage}
+                src="/images/KIDS.jpg"
                 alt="KIDS"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
@@ -94,7 +89,7 @@ const EditorsPick = () => {
         <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="relative group cursor-pointer overflow-hidden h-[300px] sm:h-[400px]">
             <img
-              src={menImage}
+              src="/images/MEN.jpg"
               alt="MEN"
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
@@ -105,7 +100,7 @@ const EditorsPick = () => {
           </div>
           <div className="relative group cursor-pointer overflow-hidden h-[300px] sm:h-[400px]">
             <img
-              src={womenImage}
+              src="/images/WOMEN.jpg"
               alt="WOMEN"
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
@@ -116,7 +111,7 @@ const EditorsPick = () => {
           </div>
           <div className="relative group cursor-pointer overflow-hidden h-[200px] sm:h-[250px]">
             <img
-              src={accessoriesImage}
+              src="/images/ACCESSORIES.jpg"
               alt="ACCESSORIES"
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
@@ -127,7 +122,7 @@ const EditorsPick = () => {
           </div>
           <div className="relative group cursor-pointer overflow-hidden h-[200px] sm:h-[250px]">
             <img
-              src={kidsImage}
+              src="/images/KIDS.jpg"
               alt="KIDS"
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />

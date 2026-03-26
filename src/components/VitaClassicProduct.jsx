@@ -1,7 +1,6 @@
 // src/components/VitaClassicProduct.jsx
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import vitaImage from "../assets/images/images.png";
 
 const VitaClassicProducts = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -108,7 +107,7 @@ const VitaClassicProducts = () => {
 
               <div className="w-[55%] relative h-full flex items-end justify-center pr-[60px]">
                 <img
-                  src={vitaImage}
+                  src="/images/images.png"
                   alt="Vita Classic Product"
                   className={`h-[90%] w-auto object-contain transition-all duration-1000 ${
                     index === currentSlide
@@ -177,7 +176,7 @@ const VitaClassicProducts = () => {
                 className={`flex-1 w-full flex items-end justify-center transition-all duration-1000 ${index === currentSlide ? "scale-100 opacity-100" : "scale-110 opacity-0"}`}
               >
                 <img
-                  src={vitaImage}
+                  src="/images/images.png"
                   alt="Vita Classic Product"
                   className="object-cover w-full h-full object-top"
                 />
