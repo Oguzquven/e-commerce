@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom"; // Link import eklendi
 import {
   Phone,
   Mail,
@@ -68,28 +69,30 @@ function Header() {
       <div className="bg-white py-4">
         <div className="flex justify-between items-center px-6 lg:px-12">
           {/* Logo */}
-          <h1 className="text-2xl font-bold text-[#252B42]">Bandage</h1>
+          <Link to="/" className="text-2xl font-bold text-[#252B42]">
+            Bandage
+          </Link>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-[#737373]">
-            <a href="#" className="hover:text-[#252B42]">
+            <Link to="/" className="hover:text-[#252B42]">
               Home
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/shop"
               className="flex items-center gap-1 hover:text-[#252B42]"
             >
               Shop <ChevronDown size={14} />
-            </a>
+            </Link>
             <a href="#" className="hover:text-[#252B42]">
               About
             </a>
             <a href="#" className="hover:text-[#252B42]">
               Blog
             </a>
-            <a href="#" className="hover:text-[#252B42]">
+            <Link to="/contact" className="hover:text-[#252B42]">
               Contact
-            </a>
+            </Link>
             <a href="#" className="hover:text-[#252B42]">
               Pages
             </a>
@@ -140,20 +143,20 @@ function Header() {
           }`}
         >
           <nav className="flex flex-col items-center py-6 gap-4 text-lg font-medium text-[#737373]">
-            <a
-              href="#"
+            <Link
+              to="/"
               className="hover:text-[#252B42]"
               onClick={() => setMobileMenuOpen(false)}
             >
               Home
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/shop"
               className="hover:text-[#252B42]"
               onClick={() => setMobileMenuOpen(false)}
             >
               Product
-            </a>
+            </Link>
             <a
               href="#"
               className="hover:text-[#252B42]"
@@ -161,13 +164,13 @@ function Header() {
             >
               Pricing
             </a>
-            <a
-              href="#"
+            <Link
+              to="/contact"
               className="hover:text-[#252B42]"
               onClick={() => setMobileMenuOpen(false)}
             >
               Contact
-            </a>
+            </Link>
           </nav>
         </div>
       </div>
