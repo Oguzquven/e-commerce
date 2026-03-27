@@ -85,9 +85,9 @@ function Header() {
             >
               Shop <ChevronDown size={14} />
             </Link>
-            <a href="#" className="hover:text-[#252B42]">
+            <Link to="/about" className="hover:text-[#252B42]">
               About
-            </a>
+            </Link>
             <a href="#" className="hover:text-[#252B42]">
               Blog
             </a>
@@ -193,6 +193,13 @@ function Header() {
               onClick={() => setMobileMenuOpen(false)}
             >
               Product
+            </Link>
+            <Link
+              to="/about"
+              className="hover:text-[#252B42]"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              About
             </Link>
             <Link
               to="/team"
