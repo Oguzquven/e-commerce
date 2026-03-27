@@ -4,7 +4,7 @@ import WorkWithUs from "../components/WorkWithUs";
 
 const ContactPage = () => {
   return (
-    <div className="w-full min-h-screen bg-[#FAFAFA]">
+    <div className="w-full bg-[#FAFAFA]">
       {/* Work With Us Section */}
       <WorkWithUs />
     </div>

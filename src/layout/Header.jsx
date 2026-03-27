@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom"; // Link import eklendi
+import { Link } from "react-router-dom";
 import {
   Phone,
   Mail,
@@ -18,6 +18,7 @@ import {
 
 function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [pagesDropdownOpen, setPagesDropdownOpen] = useState(false);
 
   return (
     <header id="main-header" className="w-full">
@@ -65,7 +66,7 @@ function Header() {
         </div>
       </div>
 
-      {/* Ana Header - Beyaz (relative kaldırıldı) */}
+      {/* Ana Header - Beyaz */}
       <div className="bg-white py-4">
         <div className="flex justify-between items-center px-6 lg:px-12">
           {/* Logo */}
@@ -93,9 +94,45 @@ function Header() {
             <Link to="/contact" className="hover:text-[#252B42]">
               Contact
             </Link>
-            <a href="#" className="hover:text-[#252B42]">
-              Pages
-            </a>
+
+            {/* Pages Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setPagesDropdownOpen(!pagesDropdownOpen)}
+                className="flex items-center gap-1 hover:text-[#252B42] transition-colors"
+              >
+                Pages{" "}
+                <ChevronDown
+                  size={14}
+                  className={`transition-transform duration-200 ${pagesDropdownOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+
+              {/* Dropdown Menu */}
+              <div
+                className={`absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 overflow-hidden transition-all duration-200 z-50 ${pagesDropdownOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2"}`}
+              >
+                <Link
+                  to="/team"
+                  className="block px-4 py-3 text-sm text-[#737373] hover:text-[#23A6F0] hover:bg-gray-50 transition-colors"
+                  onClick={() => setPagesDropdownOpen(false)}
+                >
+                  Team
+                </Link>
+                <a
+                  href="#"
+                  className="block px-4 py-3 text-sm text-[#737373] hover:text-[#23A6F0] hover:bg-gray-50 transition-colors"
+                >
+                  Pricing
+                </a>
+                <a
+                  href="#"
+                  className="block px-4 py-3 text-sm text-[#737373] hover:text-[#23A6F0] hover:bg-gray-50 transition-colors"
+                >
+                  FAQ
+                </a>
+              </div>
+            </div>
           </nav>
 
           {/* Desktop Icons */}
@@ -136,10 +173,10 @@ function Header() {
           </div>
         </div>
 
-        {/* Mobile Menu - Static, hero'yu iter (absolute değil) */}
+        {/* Mobile Menu */}
         <div
           className={`md:hidden w-full bg-white border-t border-gray-100 transition-all duration-300 overflow-hidden ${
-            mobileMenuOpen ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
+            mobileMenuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
           <nav className="flex flex-col items-center py-6 gap-4 text-lg font-medium text-[#737373]">
@@ -157,13 +194,13 @@ function Header() {
             >
               Product
             </Link>
-            <a
-              href="#"
+            <Link
+              to="/team"
               className="hover:text-[#252B42]"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Pricing
-            </a>
+              Team
+            </Link>
             <Link
               to="/contact"
               className="hover:text-[#252B42]"

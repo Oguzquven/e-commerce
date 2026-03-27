@@ -5,7 +5,8 @@ import Footer from "./layout/Footer";
 import HomePage from "./pages/HomePage";
 import ShopPage from "./pages/ShopPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
-import ContactPage from "./pages/ContactPage"; // Yeni import
+import ContactPage from "./pages/ContactPage";
+import TeamPage from "./pages/TeamPage"; // Yeni import
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/product/:id" element={<ProductDetailPage />} />
-          <Route path="/contact" element={<ContactPage />} /> {/* Yeni route */}
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/team" element={<TeamPage />} /> {/* Yeni route */}
         </Routes>
         <Footer />
       </div>

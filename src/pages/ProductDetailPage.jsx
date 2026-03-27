@@ -1,5 +1,5 @@
 // src/components/ProductDetail.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getProductById } from "../data/products";
 import BestsellerProducts from "../components/BestsellerProducts"; // Aynı klasörde olduğu için ./ kullanıyoruz
@@ -20,6 +20,28 @@ const ProductDetail = () => {
   const [activeTab, setActiveTab] = useState("description");
 
   const product = getProductById(id);
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Yumuşak geçiş için
+    });
+  }, [id]); // id değiştiğinde çalışır
+
+  if (!product) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#FAFAFA]">
+        <h1 className="text-4xl font-bold text-[#252B42] mb-4">
+          Product Not Found
+        </h1>
+        <Link
+          to="/shop"
+          className="px-8 py-3 bg-[#23A6F0] text-white font-bold rounded hover:bg-[#1a8cd4] transition-all"
+        >
+          Back to Shop
+        </Link>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
