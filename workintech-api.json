@@ -1,0 +1,75 @@
+{
+  "info": {
+    "name": "Workintech E-Commerce API",
+    "description": "E-commerce project API collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Roles",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://workintech-fe-ecommerce.onrender.com/roles",
+          "protocol": "https",
+          "host": ["workintech-fe-ecommerce", "onrender", "com"],
+          "path": ["roles"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Sign Up - Customer",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Password123!\",\n  \"role_id\": \"1\"\n}"
+        },
+        "url": {
+          "raw": "https://workintech-fe-ecommerce.onrender.com/signup",
+          "protocol": "https",
+          "host": ["workintech-fe-ecommerce", "onrender", "com"],
+          "path": ["signup"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Sign Up - Store",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Store Owner\",\n  \"email\": \"store@example.com\",\n  \"password\": \"Password123!\",\n  \"role_id\": \"2\",\n  \"store\": {\n    \"name\": \"My Store\",\n    \"phone\": \"5551234567\",\n    \"tax_no\": \"T1234567890\",\n    \"bank_account\": \"TR000000000000000000000000\"\n  }\n}"
+        },
+        "url": {
+          "raw": "https://workintech-fe-ecommerce.onrender.com/signup",
+          "protocol": "https",
+          "host": ["workintech-fe-ecommerce", "onrender", "com"],
+          "path": ["signup"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseURL",
+      "value": "https://workintech-fe-ecommerce.onrender.com"
+    }
+  ]
+}
