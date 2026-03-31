@@ -1,6 +1,7 @@
 // src/layout/Header.jsx
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Phone,
   Mail,
@@ -15,19 +16,45 @@ import {
   ChevronDown,
   Menu,
   X,
+  LogOut,
 } from "lucide-react";
+import { setUser } from "../store/actions/clientActions";
 
 function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [pagesDropdownOpen, setPagesDropdownOpen] = useState(false);
   const [authDropdownOpen, setAuthDropdownOpen] = useState(false);
+  const [shopDropdownOpen, setShopDropdownOpen] = useState(false);
+  const [mobileShopOpen, setMobileShopOpen] = useState(false); // YENİ: Mobil shop accordion
+  const [mobileUserOpen, setMobileUserOpen] = useState(false); // YENİ: Mobil user dropdown
   const [scrolled, setScrolled] = useState(false);
 
   const location = useLocation();
   const pagesRef = useRef(null);
   const authRef = useRef(null);
+  const shopRef = useRef(null);
 
-  // Scroll animasyonu
+  const user = useSelector((state) => state.client.user);
+  const categories = useSelector((state) => state.client.categories);
+  const dispatch = useDispatch();
+
+  const kadinCategories = categories.filter((cat) => cat.gender === "k");
+  const erkekCategories = categories.filter((cat) => cat.gender === "e");
+
+  const createSlug = (title) => {
+    return title
+      .toLowerCase()
+      .replace(/ı/g, "i")
+      .replace(/ğ/g, "g")
+      .replace(/ü/g, "u")
+      .replace(/ş/g, "s")
+      .replace(/ö/g, "o")
+      .replace(/ç/g, "c")
+      .replace(/[^a-z0-9]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -36,7 +63,6 @@ function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Dropdown dışına tıklayınca kapat
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (pagesRef.current && !pagesRef.current.contains(event.target)) {
@@ -45,30 +71,41 @@ function Header() {
       if (authRef.current && !authRef.current.contains(event.target)) {
         setAuthDropdownOpen(false);
       }
+      if (shopRef.current && !shopRef.current.contains(event.target)) {
+        setShopDropdownOpen(false);
+      }
     };
 
-    if (pagesDropdownOpen || authDropdownOpen) {
+    if (pagesDropdownOpen || authDropdownOpen || shopDropdownOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [pagesDropdownOpen, authDropdownOpen]);
+  }, [pagesDropdownOpen, authDropdownOpen, shopDropdownOpen]);
 
-  // Sayfa değişince dropdown'ları kapat
   useEffect(() => {
     setPagesDropdownOpen(false);
     setAuthDropdownOpen(false);
+    setShopDropdownOpen(false);
     setMobileMenuOpen(false);
+    setMobileShopOpen(false); // YENİ
+    setMobileUserOpen(false); // YENİ
   }, [location]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    dispatch(setUser({}));
+    setMobileUserOpen(false);
+  };
 
   return (
     <header
       id="main-header"
       className={`w-full transition-all duration-300 ${scrolled ? "shadow-lg bg-white" : ""}`}
     >
-      {/* Üst Bar - Koyu Lacivert */}
+      {/* Üst Bar */}
       <div className="hidden md:block bg-[#252B42] text-white py-3">
         <div className="flex justify-between items-center px-6 lg:px-12">
           <div className="flex items-center gap-6 text-sm shrink-0">
@@ -103,7 +140,7 @@ function Header() {
         </div>
       </div>
 
-      {/* Ana Header - Beyaz */}
+      {/* Ana Header */}
       <div
         className={`bg-white py-4 transition-all duration-300 ${scrolled ? "py-2" : "py-4"}`}
       >
@@ -118,32 +155,110 @@ function Header() {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-[#737373]">
-            {[
-              { to: "/", label: "Home" },
-              { to: "/shop", label: "Shop", hasDropdown: true },
-              { to: "/about", label: "About" },
-              { to: "#", label: "Blog" },
-              { to: "/contact", label: "Contact" },
-            ].map((item) => (
-              <Link
-                key={item.label}
-                to={item.to}
-                className="relative hover:text-[#252B42] transition-colors duration-300 group"
+            <Link
+              to="/"
+              className="relative hover:text-[#252B42] transition-colors duration-300 group"
+            >
+              <span className="relative">
+                Home
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#23A6F0] transition-all duration-300 group-hover:w-full" />
+              </span>
+            </Link>
+
+            {/* Shop Dropdown */}
+            <div className="relative" ref={shopRef}>
+              <button
+                onClick={() => setShopDropdownOpen(!shopDropdownOpen)}
+                className="flex items-center gap-1 hover:text-[#252B42] transition-colors cursor-pointer group"
               >
                 <span className="relative">
-                  {item.label}
+                  Shop
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#23A6F0] transition-all duration-300 group-hover:w-full" />
                 </span>
-                {item.hasDropdown && (
-                  <ChevronDown
-                    size={14}
-                    className="inline ml-1 transition-transform group-hover:rotate-180"
-                  />
-                )}
-              </Link>
-            ))}
+                <ChevronDown
+                  size={14}
+                  className={`transition-transform duration-300 ${shopDropdownOpen ? "rotate-180" : ""}`}
+                />
+              </button>
 
-            {/* Pages Dropdown - Dışına tıklayınca kapanır */}
+              <div
+                className={`absolute top-full left-0 mt-2 w-[500px] bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden transition-all duration-300 z-50 ${
+                  shopDropdownOpen
+                    ? "opacity-100 visible translate-y-0"
+                    : "opacity-0 invisible -translate-y-2 pointer-events-none"
+                }`}
+              >
+                <div className="grid grid-cols-2 gap-6 p-6">
+                  <div>
+                    <h3 className="font-bold text-[#252B42] mb-4 pb-2 border-b border-gray-200">
+                      Kadın
+                    </h3>
+                    <div className="space-y-2">
+                      {kadinCategories.map((category) => (
+                        <Link
+                          key={category.id}
+                          to={`/shop/kadin/${createSlug(category.title)}/${category.id}`}
+                          className="block text-sm text-[#737373] hover:text-[#23A6F0] hover:pl-2 transition-all duration-300"
+                          onClick={() => setShopDropdownOpen(false)}
+                        >
+                          {category.title}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="font-bold text-[#252B42] mb-4 pb-2 border-b border-gray-200">
+                      Erkek
+                    </h3>
+                    <div className="space-y-2">
+                      {erkekCategories.map((category) => (
+                        <Link
+                          key={category.id}
+                          to={`/shop/erkek/${createSlug(category.title)}/${category.id}`}
+                          className="block text-sm text-[#737373] hover:text-[#23A6F0] hover:pl-2 transition-all duration-300"
+                          onClick={() => setShopDropdownOpen(false)}
+                        >
+                          {category.title}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <Link
+              to="/about"
+              className="relative hover:text-[#252B42] transition-colors duration-300 group"
+            >
+              <span className="relative">
+                About
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#23A6F0] transition-all duration-300 group-hover:w-full" />
+              </span>
+            </Link>
+
+            <Link
+              to="#"
+              className="relative hover:text-[#252B42] transition-colors duration-300 group"
+            >
+              <span className="relative">
+                Blog
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#23A6F0] transition-all duration-300 group-hover:w-full" />
+              </span>
+            </Link>
+
+            <Link
+              to="/contact"
+              className="relative hover:text-[#252B42] transition-colors duration-300 group"
+            >
+              <span className="relative">
+                Contact
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#23A6F0] transition-all duration-300 group-hover:w-full" />
+              </span>
+            </Link>
+
+            {/* Pages Dropdown */}
             <div className="relative" ref={pagesRef}>
               <button
                 onClick={() => setPagesDropdownOpen(!pagesDropdownOpen)}
@@ -162,7 +277,7 @@ function Header() {
               <div
                 className={`absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 overflow-hidden transition-all duration-300 z-50 ${
                   pagesDropdownOpen
-                    ? "opacity-100 visible translate-y-0 animate-fade-in-down"
+                    ? "opacity-100 visible translate-y-0"
                     : "opacity-0 invisible -translate-y-2 pointer-events-none"
                 }`}
               >
@@ -170,7 +285,7 @@ function Header() {
                   { to: "/team", label: "Team" },
                   { to: "#", label: "Pricing" },
                   { to: "#", label: "FAQ" },
-                ].map((item, index) => (
+                ].map((item) => (
                   <Link
                     key={item.label}
                     to={item.to}
@@ -186,42 +301,77 @@ function Header() {
 
           {/* Desktop Icons */}
           <div className="hidden md:flex items-center gap-6 text-[#23A6F0]">
-            {/* Auth Dropdown - Dışına tıklayınca kapanır */}
-            <div className="relative" ref={authRef}>
-              <button
-                onClick={() => setAuthDropdownOpen(!authDropdownOpen)}
-                className="flex items-center gap-1 text-sm font-medium hover:text-[#1a8fd4] transition-all duration-300 hover:scale-105 cursor-pointer"
-              >
-                <User
-                  size={16}
-                  className="hover:rotate-12 transition-transform duration-300"
-                />
-                <span>Login / Register</span>
-              </button>
+            {user.email ? (
+              <div className="flex items-center gap-3 group/user">
+                <div className="relative cursor-pointer">
+                  <img
+                    src={
+                      user.gravatarUrl || "https://gravatar.com/avatar/?d=mp"
+                    }
+                    alt={user.name}
+                    className="w-9 h-9 rounded-full border-2 border-[#23A6F0] transition-all duration-300 group-hover/user:scale-110 group-hover/user:border-[#1a8fd4] object-cover"
+                  />
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white animate-pulse" />
+                  <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover/user:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none z-50">
+                    {user.email}
+                  </div>
+                </div>
 
-              <div
-                className={`absolute top-full right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-100 overflow-hidden transition-all duration-300 z-50 ${
-                  authDropdownOpen
-                    ? "opacity-100 visible translate-y-0 animate-fade-in-down"
-                    : "opacity-0 invisible -translate-y-2 pointer-events-none"
-                }`}
-              >
-                <Link
-                  to="/login"
-                  className="block px-4 py-3 text-sm text-[#737373] hover:text-[#23A6F0] hover:bg-gray-50 hover:pl-6 transition-all duration-300"
-                  onClick={() => setAuthDropdownOpen(false)}
+                <span className="text-sm font-semibold text-[#252B42] group-hover/user:text-[#23A6F0] transition-colors duration-300 cursor-default">
+                  {user.name}
+                </span>
+
+                <button
+                  onClick={handleLogout}
+                  className="relative text-sm font-medium text-red-500 px-4 py-2 rounded-full overflow-hidden transition-all duration-300 cursor-pointer group/logout"
                 >
-                  Login
-                </Link>
-                <Link
-                  to="/signup"
-                  className="block px-4 py-3 text-sm text-[#737373] hover:text-[#23A6F0] hover:bg-gray-50 hover:pl-6 transition-all duration-300"
-                  onClick={() => setAuthDropdownOpen(false)}
-                >
-                  Sign Up
-                </Link>
+                  <span className="absolute inset-0 bg-red-500 transform -translate-x-full group-hover/logout:translate-x-0 transition-transform duration-300 ease-out" />
+                  <span className="relative z-10 flex items-center gap-2 transition-colors duration-300 group-hover/logout:text-white">
+                    <LogOut
+                      size={14}
+                      className="transition-all duration-300 group-hover/logout:rotate-180"
+                    />
+                    Logout
+                  </span>
+                </button>
               </div>
-            </div>
+            ) : (
+              <div className="relative" ref={authRef}>
+                <button
+                  onClick={() => setAuthDropdownOpen(!authDropdownOpen)}
+                  className="flex items-center gap-1 text-sm font-medium hover:text-[#1a8fd4] transition-all duration-300 hover:scale-105 cursor-pointer"
+                >
+                  <User
+                    size={16}
+                    className="hover:rotate-12 transition-transform duration-300"
+                  />
+                  <span>Login / Register</span>
+                </button>
+
+                <div
+                  className={`absolute top-full right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-100 overflow-hidden transition-all duration-300 z-50 ${
+                    authDropdownOpen
+                      ? "opacity-100 visible translate-y-0"
+                      : "opacity-0 invisible -translate-y-2 pointer-events-none"
+                  }`}
+                >
+                  <Link
+                    to="/login"
+                    className="block px-4 py-3 text-sm text-[#737373] hover:text-[#23A6F0] hover:bg-gray-50 hover:pl-6 transition-all duration-300"
+                    onClick={() => setAuthDropdownOpen(false)}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="block px-4 py-3 text-sm text-[#737373] hover:text-[#23A6F0] hover:bg-gray-50 hover:pl-6 transition-all duration-300"
+                    onClick={() => setAuthDropdownOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              </div>
+            )}
 
             <div className="flex items-center gap-4">
               {[Search, ShoppingCart, Heart].map((Icon, index) => (
@@ -234,7 +384,7 @@ function Header() {
             </div>
           </div>
 
-          {/* Mobile Icons + Hamburger */}
+          {/* Mobile Icons - YENİ DÜZEN */}
           <div className="flex md:hidden items-center gap-4 text-[#252B42]">
             <Search
               size={20}
@@ -244,6 +394,22 @@ function Header() {
               size={20}
               className="cursor-pointer hover:scale-110 transition-transform"
             />
+
+            {/* YENİ: Mobil kullanıcı profili */}
+            {user.email ? (
+              <button
+                onClick={() => setMobileUserOpen(!mobileUserOpen)}
+                className="relative"
+              >
+                <img
+                  src={user.gravatarUrl || "https://gravatar.com/avatar/?d=mp"}
+                  alt={user.name}
+                  className="w-8 h-8 rounded-full border-2 border-[#23A6F0] object-cover"
+                />
+                <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white" />
+              </button>
+            ) : null}
+
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-1 hover:rotate-90 transition-transform duration-300"
@@ -252,52 +418,161 @@ function Header() {
             </button>
           </div>
         </div>
+        {/* YENİ: Mobil User Dropdown */}
+        {mobileUserOpen && user.email && (
+          <div className="md:hidden absolute top-full right-4 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden">
+            <div className="p-4 bg-gradient-to-r from-[#23A6F0] to-[#1a8fd4] text-white">
+              <div className="flex items-center gap-3">
+                <img
+                  src={user.gravatarUrl || "https://gravatar.com/avatar/?d=mp"}
+                  alt={user.name}
+                  className="w-12 h-12 rounded-full border-2 border-white object-cover"
+                />
+                <div>
+                  <p className="font-semibold">{user.name}</p>
+                  <p className="text-xs opacity-90">{user.email}</p>
+                </div>
+              </div>
+            </div>
+            <div className="p-2">
+              <Link
+                to="/profile"
+                className="flex items-center gap-2 px-4 py-3 text-sm text-[#737373] hover:text-[#23A6F0] hover:bg-blue-50 rounded-lg transition-all duration-300"
+                onClick={() => setMobileUserOpen(false)}
+              >
+                <User size={16} />
+                Profilim
+              </Link>
+              <Link
+                to="/orders"
+                className="flex items-center gap-2 px-4 py-3 text-sm text-[#737373] hover:text-[#23A6F0] hover:bg-blue-50 rounded-lg transition-all duration-300"
+                onClick={() => setMobileUserOpen(false)}
+              >
+                <ShoppingCart size={16} />
+                Siparişlerim
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center gap-2 px-4 py-3 text-sm text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-300"
+              >
+                <LogOut size={16} />
+                Çıkış Yap
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Mobile Menu */}
         <div
           className={`md:hidden w-full bg-white border-t border-gray-100 transition-all duration-500 overflow-hidden ${
-            mobileMenuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+            mobileMenuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          <nav className="flex flex-col items-center py-6 gap-4 text-lg font-medium text-[#737373]">
-            {[
-              { to: "/", label: "Home" },
-              { to: "/shop", label: "Product" },
-              { to: "/about", label: "About" },
-              { to: "/team", label: "Team" },
-              { to: "/contact", label: "Contact" },
-            ].map((item, index) => (
-              <Link
-                key={item.label}
-                to={item.to}
-                className="hover:text-[#252B42] hover:scale-105 transition-all duration-300"
-                onClick={() => setMobileMenuOpen(false)}
-                style={{
-                  opacity: mobileMenuOpen ? 1 : 0,
-                  transform: mobileMenuOpen
-                    ? "translateY(0)"
-                    : "translateY(-10px)",
-                  transition: `all 0.3s ease ${index * 100}ms`,
-                }}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="w-full border-t border-gray-200 my-2" />
+          <nav className="flex flex-col items-center py-6 gap-4 text-xl font-medium text-[#737373]">
             <Link
-              to="/login"
-              className="hover:text-[#23A6F0] text-[#23A6F0] hover:scale-105 transition-all duration-300"
+              to="/"
+              className="hover:text-[#252B42] hover:scale-105 transition-all duration-300"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Login
+              Home
             </Link>
+
+            {/* Shop - Ok işareti kaldırıldı */}
+            <button
+              onClick={() => setMobileShopOpen(!mobileShopOpen)}
+              className="hover:text-[#252B42] hover:scale-105 transition-all duration-300"
+            >
+              Shop
+            </button>
+
+            {/* Shop Dropdown */}
+            {mobileShopOpen && (
+              <div className="w-full px-6 animate-fade-in">
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="grid grid-cols-2 gap-4 text-left text-base">
+                    {/* Kadın */}
+                    <div>
+                      <h4 className="font-bold text-[#252B42] mb-3 text-base border-b border-gray-200 pb-2">
+                        Kadın
+                      </h4>
+                      <div className="space-y-2">
+                        {kadinCategories.map((category) => (
+                          <Link
+                            key={category.id}
+                            to={`/shop/kadin/${createSlug(category.title)}/${category.id}`}
+                            className="block text-[#737373] hover:text-[#23A6F0] transition-colors"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {category.title}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Erkek */}
+                    <div>
+                      <h4 className="font-bold text-[#252B42] mb-3 text-base border-b border-gray-200 pb-2">
+                        Erkek
+                      </h4>
+                      <div className="space-y-2">
+                        {erkekCategories.map((category) => (
+                          <Link
+                            key={category.id}
+                            to={`/shop/erkek/${createSlug(category.title)}/${category.id}`}
+                            className="block text-[#737373] hover:text-[#23A6F0] transition-colors"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {category.title}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <Link
-              to="/signup"
-              className="hover:text-[#23A6F0] text-[#23A6F0] hover:scale-105 transition-all duration-300"
+              to="/about"
+              className="hover:text-[#252B42] hover:scale-105 transition-all duration-300"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Sign Up
+              About
             </Link>
+            <Link
+              to="/team"
+              className="hover:text-[#252B42] hover:scale-105 transition-all duration-300"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Team
+            </Link>
+            <Link
+              to="/contact"
+              className="hover:text-[#252B42] hover:scale-105 transition-all duration-300"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Contact
+            </Link>
+
+            {/* Giriş yapılmamışsa Login/Register */}
+            {!user.email ? (
+              <div className="flex flex-col items-center gap-4 mt-2">
+                <Link
+                  to="/login"
+                  className="text-[#23A6F0] hover:scale-105 transition-all duration-300"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="text-[#23A6F0] hover:scale-105 transition-all duration-300"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Sign Up
+                </Link>
+              </div>
+            ) : null}
           </nav>
         </div>
       </div>

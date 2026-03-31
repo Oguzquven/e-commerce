@@ -1,3 +1,4 @@
+// src/components/ShopProductList.jsx
 import React, { useState } from "react";
 import {
   LayoutGrid,
@@ -8,19 +9,33 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { getAllProducts } from "../data/products";
 
 // Ürün Kartı Componenti - Figma ölçüleri: 238 x 488 Hug
 const ProductCard = ({ product, index, viewMode }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [selectedColor, setSelectedColor] = useState(null);
 
+  // API'den gelen veriyi mevcut yapıya dönüştür
+  const productData = {
+    id: product.id,
+    title: product.name || product.title,
+    department: product.category?.name || product.department || "Category",
+    oldPrice: `$${product.price}`,
+    newPrice: `$${product.discountedPrice || product.sale_price || product.price}`,
+    image:
+      product.images?.[0]?.url ||
+      product.image ||
+      product.thumbnail ||
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=500&fit=crop",
+    colors: product.colors || ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
+  };
+
   // Grid görünümü - Figma: 238 x 488 Hug
   if (viewMode === "grid") {
     return (
       <Link
-        to={`/product/${product.id}`}
-        className="flex flex-col w-[238px] group cursor-pointer"
+        to={`/product/${productData.id}`}
+        className="flex flex-col w-full max-w-[238px] group cursor-pointer mx-auto"
         style={{
           animation: `fadeInUp 0.6s ease-out ${index * 0.05}s both`,
         }}
@@ -28,7 +43,7 @@ const ProductCard = ({ product, index, viewMode }) => {
         onMouseLeave={() => setIsHovered(false)}
       >
         {/* Image Container - 238x427px - Figma'daki gibi */}
-        <div className="w-[238px] h-[427px] overflow-hidden relative">
+        <div className="w-full h-[427px] overflow-hidden relative">
           {/* Hover Overlay */}
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500 z-10" />
 
@@ -99,14 +114,17 @@ const ProductCard = ({ product, index, viewMode }) => {
             </button>
           </div>
 
-          {/* Sale Badge */}
-          <div className="absolute top-4 left-4 bg-[#E74C3C] text-white text-xs font-bold px-3 py-1 rounded z-20">
-            Sale
-          </div>
+          {/* Sale Badge - İndirim varsa göster */}
+          {product.discountedPrice &&
+            product.discountedPrice < product.price && (
+              <div className="absolute top-4 left-4 bg-[#E74C3C] text-white text-xs font-bold px-3 py-1 rounded z-20">
+                Sale
+              </div>
+            )}
 
           <img
-            src={product.image}
-            alt={product.title}
+            src={productData.image}
+            alt={productData.title}
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
             onError={(e) => {
               e.target.src =
@@ -118,25 +136,34 @@ const ProductCard = ({ product, index, viewMode }) => {
         {/* Content - Figma'daki gibi ortalanmış */}
         <div className="flex flex-col items-center pt-4 pb-4 transition-all duration-300 group-hover:pt-5">
           <h5 className="text-[#252B42] font-bold text-base mb-1 transition-colors duration-300 group-hover:text-[#23A6F0]">
-            {product.title}
+            {productData.title}
           </h5>
           <p className="text-[#737373] text-sm font-bold mb-2">
-            {product.department}
+            {productData.department}
           </p>
 
           {/* Prices */}
           <div className="flex gap-2 mb-3">
-            <span className="text-[#BDBDBD] font-bold text-base line-through transition-all duration-300">
-              {product.oldPrice}
-            </span>
-            <span className="text-[#23856D] font-bold text-base group-hover:scale-110 transition-transform duration-300">
-              {product.newPrice}
-            </span>
+            {product.discountedPrice &&
+            product.discountedPrice < product.price ? (
+              <>
+                <span className="text-[#BDBDBD] font-bold text-base line-through transition-all duration-300">
+                  {productData.oldPrice}
+                </span>
+                <span className="text-[#23856D] font-bold text-base group-hover:scale-110 transition-transform duration-300">
+                  {productData.newPrice}
+                </span>
+              </>
+            ) : (
+              <span className="text-[#23856D] font-bold text-base group-hover:scale-110 transition-transform duration-300">
+                {productData.newPrice}
+              </span>
+            )}
           </div>
 
           {/* Color Dots */}
           <div className="flex gap-2">
-            {product.colors.map((color, colorIndex) => (
+            {productData.colors.map((color, colorIndex) => (
               <div
                 key={colorIndex}
                 onClick={(e) => {
@@ -166,7 +193,7 @@ const ProductCard = ({ product, index, viewMode }) => {
   // Liste görünümü - Yan yana düzen
   return (
     <Link
-      to={`/product/${product.id}`}
+      to={`/product/${productData.id}`}
       className="flex flex-col sm:flex-row gap-4 p-4 bg-white rounded-lg shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group"
       style={{
         animation: `fadeInUp 0.6s ease-out ${index * 0.05}s both`,
@@ -178,13 +205,15 @@ const ProductCard = ({ product, index, viewMode }) => {
       <div className="w-full sm:w-[200px] h-[300px] sm:h-[200px] overflow-hidden relative flex-shrink-0">
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500 z-10" />
 
-        <div className="absolute top-4 left-4 bg-[#E74C3C] text-white text-xs font-bold px-3 py-1 rounded z-20">
-          Sale
-        </div>
+        {product.discountedPrice && product.discountedPrice < product.price && (
+          <div className="absolute top-4 left-4 bg-[#E74C3C] text-white text-xs font-bold px-3 py-1 rounded z-20">
+            Sale
+          </div>
+        )}
 
         <img
-          src={product.image}
-          alt={product.title}
+          src={productData.image}
+          alt={productData.title}
           className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
           onError={(e) => {
             e.target.src =
@@ -196,23 +225,32 @@ const ProductCard = ({ product, index, viewMode }) => {
       {/* Content - List için sola yaslı */}
       <div className="flex flex-col justify-center flex-1 py-2">
         <h5 className="text-[#252B42] font-bold text-lg mb-1 transition-colors duration-300 group-hover:text-[#23A6F0] text-left">
-          {product.title}
+          {productData.title}
         </h5>
         <p className="text-[#737373] text-sm font-bold mb-2 text-left">
-          {product.department}
+          {productData.department}
         </p>
 
         <div className="flex gap-2 mb-3 items-start">
-          <span className="text-[#BDBDBD] font-bold text-base line-through">
-            {product.oldPrice}
-          </span>
-          <span className="text-[#23856D] font-bold text-base group-hover:scale-110 transition-transform duration-300">
-            {product.newPrice}
-          </span>
+          {product.discountedPrice &&
+          product.discountedPrice < product.price ? (
+            <>
+              <span className="text-[#BDBDBD] font-bold text-base line-through">
+                {productData.oldPrice}
+              </span>
+              <span className="text-[#23856D] font-bold text-base group-hover:scale-110 transition-transform duration-300">
+                {productData.newPrice}
+              </span>
+            </>
+          ) : (
+            <span className="text-[#23856D] font-bold text-base group-hover:scale-110 transition-transform duration-300">
+              {productData.newPrice}
+            </span>
+          )}
         </div>
 
         <div className="flex gap-2 justify-start mb-4">
-          {product.colors.map((color, colorIndex) => (
+          {productData.colors.map((color, colorIndex) => (
             <div
               key={colorIndex}
               className="w-4 h-4 rounded-full cursor-pointer transition-all duration-300 hover:scale-125 hover:ring-2 hover:ring-offset-2 hover:ring-[#252B42]"
@@ -253,17 +291,14 @@ const ProductCard = ({ product, index, viewMode }) => {
   );
 };
 
-const ShopProductList = () => {
+const ShopProductList = ({ products, total }) => {
   const [viewMode, setViewMode] = useState("grid");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Merkezi veri kaynağından tüm ürünleri al
-  const allProducts = getAllProducts();
+  const itemsPerPage = 15;
+  const totalPages = Math.ceil((total || products.length) / itemsPerPage);
 
-  const itemsPerPage = 15; // Her sayfada 15 ürün (5 x 3 = 15, tam bölünür)
-  const totalPages = Math.ceil(allProducts.length / itemsPerPage);
-
-  const currentProducts = allProducts.slice(
+  const currentProducts = products.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
@@ -276,25 +311,47 @@ const ShopProductList = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
+  // Sayfa numaralarını hesapla (max 3 göster)
+  const getPageNumbers = () => {
+    let pages = [];
+
+    if (totalPages <= 3) {
+      // 3 veya az sayfa varsa hepsini göster
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else if (currentPage === 1) {
+      // Başta: 1, 2, 3
+      pages = [1, 2, 3];
+    } else if (currentPage === totalPages) {
+      // Sonda: n-2, n-1, n
+      pages = [totalPages - 2, totalPages - 1, totalPages];
+    } else {
+      // Ortada: önceki, şu anki, sonraki
+      pages = [currentPage - 1, currentPage, currentPage + 1];
+    }
+
+    return pages;
+  };
+
   return (
     <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
       <div className="max-w-[1440px] mx-auto">
-        {/* Filter Bar - Ürün grid'iyle aynı genişlikte */}
+        {/* Filter Bar */}
         <div
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-[30px] mb-8 pb-6 border-b border-gray-200 items-center"
           style={{ animation: "fadeInUp 0.6s ease-out" }}
         >
-          {/* Showing results - Sol hizalı, ürün grid'iyle aynı başlangıç */}
+          {/* Showing results */}
           <div className="col-span-1 sm:col-span-1 md:col-span-1 lg:col-span-1">
             <p className="text-[#737373] text-sm font-bold whitespace-nowrap">
-              Showing {currentProducts.length} of {allProducts.length} results
+              Showing {currentProducts.length} of {total || products.length}{" "}
+              results
             </p>
           </div>
 
-          {/* Boş alan - Ortayı doldur */}
+          {/* Boş alan */}
           <div className="hidden lg:block lg:col-span-2"></div>
 
-          {/* Controls - Sağ hizalı, ürün grid'iyle aynı bitiş */}
+          {/* Controls */}
           <div className="col-span-1 sm:col-span-1 md:col-span-2 lg:col-span-2 flex items-center justify-end gap-4">
             {/* View Toggle */}
             <div className="flex items-center gap-2">
@@ -343,65 +400,106 @@ const ShopProductList = () => {
         </div>
 
         {/* Products Grid */}
-        <div
-          className={`${
-            viewMode === "grid"
-              ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-[30px] justify-items-center"
-              : "flex flex-col gap-4"
-          }`}
-        >
-          {currentProducts.map((product, index) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              index={index}
-              viewMode={viewMode}
-            />
-          ))}
-        </div>
+        {products.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-[#737373] text-lg">No products found</p>
+          </div>
+        ) : (
+          <div
+            className={`${
+              viewMode === "grid"
+                ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-[30px] w-full"
+                : "flex flex-col gap-4"
+            }`}
+          >
+            {currentProducts.map((product, index) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                index={index}
+                viewMode={viewMode}
+              />
+            ))}
+          </div>
+        )}
 
-        {/* Pagination */}
-        <div className="flex justify-center mt-12">
-          <nav className="flex items-center gap-2">
-            <button
-              onClick={prevPage}
-              disabled={currentPage === 1}
-              className={`w-10 h-10 flex items-center justify-center rounded border transition-all duration-300 cursor-pointer ${
-                currentPage === 1
-                  ? "border-[#E8E8E8] text-[#BDBDBD] cursor-not-allowed"
-                  : "border-[#E8E8E8] text-[#23A6F0] hover:bg-[#23A6F0] hover:text-white hover:border-[#23A6F0]"
-              }`}
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-
-            {[...Array(totalPages)].map((_, i) => (
+        {/* Pagination - Sadece 3 sayfa göster */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-12">
+            <nav className="flex items-center gap-2">
+              {/* Prev Button */}
               <button
-                key={i + 1}
-                onClick={() => setCurrentPage(i + 1)}
-                className={`w-10 h-10 flex items-center justify-center rounded font-bold text-sm transition-all duration-300 cursor-pointer ${
-                  currentPage === i + 1
-                    ? "bg-[#23A6F0] text-white"
-                    : "border border-[#E8E8E8] text-[#23A6F0] hover:bg-[#23A6F0] hover:text-white hover:border-[#23A6F0]"
+                onClick={prevPage}
+                disabled={currentPage === 1}
+                className={`w-10 h-10 flex items-center justify-center rounded border transition-all duration-300 ${
+                  currentPage === 1
+                    ? "border-[#E8E8E8] text-[#BDBDBD] cursor-not-allowed"
+                    : "border-[#E8E8E8] text-[#23A6F0] hover:bg-[#23A6F0] hover:text-white hover:border-[#23A6F0]"
                 }`}
               >
-                {i + 1}
+                <ChevronLeft className="w-5 h-5" />
               </button>
-            ))}
 
-            <button
-              onClick={nextPage}
-              disabled={currentPage === totalPages}
-              className={`w-10 h-10 flex items-center justify-center rounded border transition-all duration-300 cursor-pointer ${
-                currentPage === totalPages
-                  ? "border-[#E8E8E8] text-[#BDBDBD] cursor-not-allowed"
-                  : "border-[#E8E8E8] text-[#23A6F0] hover:bg-[#23A6F0] hover:text-white hover:border-[#23A6F0]"
-              }`}
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </nav>
-        </div>
+              {/* İlk sayfa ve ... */}
+              {totalPages > 3 && currentPage > 2 && (
+                <>
+                  <button
+                    onClick={() => setCurrentPage(1)}
+                    className="w-10 h-10 flex items-center justify-center rounded border border-[#E8E8E8] text-[#23A6F0] hover:bg-[#23A6F0] hover:text-white hover:border-[#23A6F0] font-bold text-sm transition-all duration-300"
+                  >
+                    1
+                  </button>
+                  {currentPage > 3 && (
+                    <span className="px-2 text-[#737373]">...</span>
+                  )}
+                </>
+              )}
+
+              {/* Ana sayfa numaraları (max 3) */}
+              {getPageNumbers().map((pageNum) => (
+                <button
+                  key={pageNum}
+                  onClick={() => setCurrentPage(pageNum)}
+                  className={`w-10 h-10 flex items-center justify-center rounded font-bold text-sm transition-all duration-300 ${
+                    currentPage === pageNum
+                      ? "bg-[#23A6F0] text-white"
+                      : "border border-[#E8E8E8] text-[#23A6F0] hover:bg-[#23A6F0] hover:text-white hover:border-[#23A6F0]"
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              ))}
+
+              {/* ... ve son sayfa */}
+              {totalPages > 3 && currentPage < totalPages - 1 && (
+                <>
+                  {currentPage < totalPages - 2 && (
+                    <span className="px-2 text-[#737373]">...</span>
+                  )}
+                  <button
+                    onClick={() => setCurrentPage(totalPages)}
+                    className="w-10 h-10 flex items-center justify-center rounded border border-[#E8E8E8] text-[#23A6F0] hover:bg-[#23A6F0] hover:text-white hover:border-[#23A6F0] font-bold text-sm transition-all duration-300"
+                  >
+                    {totalPages}
+                  </button>
+                </>
+              )}
+
+              {/* Next Button */}
+              <button
+                onClick={nextPage}
+                disabled={currentPage === totalPages}
+                className={`w-10 h-10 flex items-center justify-center rounded border transition-all duration-300 ${
+                  currentPage === totalPages
+                    ? "border-[#E8E8E8] text-[#BDBDBD] cursor-not-allowed"
+                    : "border-[#E8E8E8] text-[#23A6F0] hover:bg-[#23A6F0] hover:text-white hover:border-[#23A6F0]"
+                }`}
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </nav>
+          </div>
+        )}
       </div>
 
       <style>{`

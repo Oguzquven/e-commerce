@@ -2,32 +2,23 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://workintech-fe-ecommerce.onrender.com",
-  timeout: 10000,
+  baseURL: "https://workintech-fe-ecommerce.onrender.com", // Boşluk kaldırıldı
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Request interceptor
+// Request Interceptor - Her istekte token ekle
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      // NOT: Bearer prefix YOK, direkt token
+      config.headers.Authorization = token;
     }
     return config;
   },
-  (error) => Promise.reject(error),
-);
-
-// Response interceptor
-api.interceptors.response.use(
-  (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-    }
     return Promise.reject(error);
   },
 );
