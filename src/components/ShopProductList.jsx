@@ -291,24 +291,41 @@ const ProductCard = ({ product, index, viewMode }) => {
   );
 };
 
-const ShopProductList = ({ products, total }) => {
+const ShopProductList = ({
+  products,
+  total,
+  sort,
+  filter,
+  limit,
+  offset,
+  currentPage,
+  onSortChange,
+  onFilterChange,
+  onPageChange,
+  onLimitChange,
+}) => {
   const [viewMode, setViewMode] = useState("grid");
-  const [currentPage, setCurrentPage] = useState(1);
 
-  const itemsPerPage = 15;
-  const totalPages = Math.ceil((total || products.length) / itemsPerPage);
+  // API'den gelen total ve limit'e göre hesapla
+  const itemsPerPage = limit || 25;
+  const totalPages = Math.ceil((total || 0) / itemsPerPage);
 
-  const currentProducts = products.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  );
+  // Sayfa değişince offset hesapla ve parent'a bildir
+  const handlePageChange = (pageNum) => {
+    const newOffset = (pageNum - 1) * itemsPerPage;
+    onPageChange(pageNum, newOffset);
+  };
 
   const nextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+    if (currentPage < totalPages) {
+      handlePageChange(currentPage + 1);
+    }
   };
 
   const prevPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
+    if (currentPage > 1) {
+      handlePageChange(currentPage - 1);
+    }
   };
 
   // Sayfa numaralarını hesapla (max 3 göster)
@@ -316,16 +333,12 @@ const ShopProductList = ({ products, total }) => {
     let pages = [];
 
     if (totalPages <= 3) {
-      // 3 veya az sayfa varsa hepsini göster
       for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else if (currentPage === 1) {
-      // Başta: 1, 2, 3
       pages = [1, 2, 3];
     } else if (currentPage === totalPages) {
-      // Sonda: n-2, n-1, n
       pages = [totalPages - 2, totalPages - 1, totalPages];
     } else {
-      // Ortada: önceki, şu anki, sonraki
       pages = [currentPage - 1, currentPage, currentPage + 1];
     }
 
@@ -341,18 +354,42 @@ const ShopProductList = ({ products, total }) => {
           style={{ animation: "fadeInUp 0.6s ease-out" }}
         >
           {/* Showing results */}
-          <div className="col-span-1 sm:col-span-1 md:col-span-1 lg:col-span-1">
+          <div className="col-span-1">
             <p className="text-[#737373] text-sm font-bold whitespace-nowrap">
-              Showing {currentProducts.length} of {total || products.length}{" "}
-              results
+              Showing {products.length} of {total} results
             </p>
           </div>
 
-          {/* Boş alan */}
-          <div className="hidden lg:block lg:col-span-2"></div>
+          {/* Limit Dropdown */}
+          <div className="col-span-1">
+            <div className="relative">
+              <select
+                value={limit}
+                onChange={(e) => onLimitChange(parseInt(e.target.value))}
+                className="appearance-none bg-white border border-[#DEDEDE] rounded px-4 py-2 pr-8 text-sm text-[#737373] focus:outline-none focus:border-[#23A6F0] w-full cursor-pointer transition-all duration-300 hover:border-[#23A6F0]"
+              >
+                <option value={10}>10 per page</option>
+                <option value={25}>25 per page</option>
+                <option value={50}>50 per page</option>
+                <option value={100}>100 per page</option>
+              </select>
+              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-[#737373] pointer-events-none" />
+            </div>
+          </div>
 
-          {/* Controls */}
-          <div className="col-span-1 sm:col-span-1 md:col-span-2 lg:col-span-2 flex items-center justify-end gap-4">
+          {/* Filter Input */}
+          <div className="col-span-1">
+            <input
+              type="text"
+              placeholder="Filter products..."
+              value={filter || ""}
+              onChange={(e) => onFilterChange(e.target.value)}
+              className="w-full px-4 py-2 border border-[#DEDEDE] rounded text-sm text-[#737373] focus:outline-none focus:border-[#23A6F0] transition-all duration-300"
+            />
+          </div>
+
+          {/* Controls - Sağ hizalı */}
+          <div className="col-span-1 sm:col-span-2 flex items-center justify-end gap-4">
             {/* View Toggle */}
             <div className="flex items-center gap-2">
               <span className="text-[#737373] text-sm font-bold mr-2">
@@ -382,17 +419,25 @@ const ShopProductList = ({ products, total }) => {
 
             {/* Sort Dropdown */}
             <div className="relative">
-              <select className="appearance-none bg-white border border-[#DEDEDE] rounded px-4 py-2 pr-8 text-sm text-[#737373] focus:outline-none focus:border-[#23A6F0] min-w-[140px] cursor-pointer transition-all duration-300 hover:border-[#23A6F0]">
-                <option value="popularity">Popularity</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="newest">Newest</option>
+              <select
+                value={sort || ""}
+                onChange={(e) => onSortChange(e.target.value)}
+                className="appearance-none bg-white border border-[#DEDEDE] rounded px-4 py-2 pr-8 text-sm text-[#737373] focus:outline-none focus:border-[#23A6F0] min-w-[140px] cursor-pointer transition-all duration-300 hover:border-[#23A6F0]"
+              >
+                <option value="">Popularity</option>
+                <option value="price:asc">Price: Low to High</option>
+                <option value="price:desc">Price: High to Low</option>
+                <option value="rating:asc">Rating: Low to High</option>
+                <option value="rating:desc">Rating: High to Low</option>
               </select>
               <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-[#737373] pointer-events-none" />
             </div>
 
             {/* Filter Button */}
-            <button className="bg-[#23A6F0] hover:bg-[#1a8cd4] text-white px-6 py-2 rounded text-sm font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center gap-2 cursor-pointer">
+            <button
+              onClick={() => onFilterChange(filter)}
+              className="bg-[#23A6F0] hover:bg-[#1a8cd4] text-white px-6 py-2 rounded text-sm font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center gap-2 cursor-pointer"
+            >
               <Filter className="w-4 h-4 sm:hidden" />
               <span className="hidden sm:inline">Filter</span>
             </button>
@@ -412,7 +457,7 @@ const ShopProductList = ({ products, total }) => {
                 : "flex flex-col gap-4"
             }`}
           >
-            {currentProducts.map((product, index) => (
+            {products.map((product, index) => (
               <ProductCard
                 key={product.id}
                 product={product}
@@ -423,7 +468,7 @@ const ShopProductList = ({ products, total }) => {
           </div>
         )}
 
-        {/* Pagination - Sadece 3 sayfa göster */}
+        {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex justify-center mt-12">
             <nav className="flex items-center gap-2">
@@ -444,7 +489,7 @@ const ShopProductList = ({ products, total }) => {
               {totalPages > 3 && currentPage > 2 && (
                 <>
                   <button
-                    onClick={() => setCurrentPage(1)}
+                    onClick={() => handlePageChange(1)}
                     className="w-10 h-10 flex items-center justify-center rounded border border-[#E8E8E8] text-[#23A6F0] hover:bg-[#23A6F0] hover:text-white hover:border-[#23A6F0] font-bold text-sm transition-all duration-300"
                   >
                     1
@@ -459,7 +504,7 @@ const ShopProductList = ({ products, total }) => {
               {getPageNumbers().map((pageNum) => (
                 <button
                   key={pageNum}
-                  onClick={() => setCurrentPage(pageNum)}
+                  onClick={() => handlePageChange(pageNum)}
                   className={`w-10 h-10 flex items-center justify-center rounded font-bold text-sm transition-all duration-300 ${
                     currentPage === pageNum
                       ? "bg-[#23A6F0] text-white"
@@ -477,7 +522,7 @@ const ShopProductList = ({ products, total }) => {
                     <span className="px-2 text-[#737373]">...</span>
                   )}
                   <button
-                    onClick={() => setCurrentPage(totalPages)}
+                    onClick={() => handlePageChange(totalPages)}
                     className="w-10 h-10 flex items-center justify-center rounded border border-[#E8E8E8] text-[#23A6F0] hover:bg-[#23A6F0] hover:text-white hover:border-[#23A6F0] font-bold text-sm transition-all duration-300"
                   >
                     {totalPages}
