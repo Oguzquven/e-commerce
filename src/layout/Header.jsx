@@ -17,29 +17,46 @@ import {
   Menu,
   X,
   LogOut,
+  Trash2,
+  Plus,
+  Minus,
 } from "lucide-react";
 import { setUser } from "../store/actions/clientActions";
+import {
+  removeFromCart,
+  updateCartItem,
+} from "../store/actions/shoppingCartActions";
 
 function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [pagesDropdownOpen, setPagesDropdownOpen] = useState(false);
   const [authDropdownOpen, setAuthDropdownOpen] = useState(false);
   const [shopDropdownOpen, setShopDropdownOpen] = useState(false);
-  const [mobileShopOpen, setMobileShopOpen] = useState(false); // YENİ: Mobil shop accordion
-  const [mobileUserOpen, setMobileUserOpen] = useState(false); // YENİ: Mobil user dropdown
+  const [mobileShopOpen, setMobileShopOpen] = useState(false);
+  const [mobileUserOpen, setMobileUserOpen] = useState(false);
+  const [cartDropdownOpen, setCartDropdownOpen] = useState(false); // YENİ: Cart dropdown
   const [scrolled, setScrolled] = useState(false);
 
   const location = useLocation();
   const pagesRef = useRef(null);
   const authRef = useRef(null);
   const shopRef = useRef(null);
+  const cartRef = useRef(null); // YENİ: Cart ref
 
   const user = useSelector((state) => state.client.user);
   const categories = useSelector((state) => state.client.categories);
+  const { cart } = useSelector((state) => state.shoppingCart); // YENİ: Cart state
   const dispatch = useDispatch();
 
   const kadinCategories = categories.filter((cat) => cat.gender === "k");
   const erkekCategories = categories.filter((cat) => cat.gender === "e");
+
+  // Sepet hesaplamaları
+  const cartItemCount = cart.reduce((total, item) => total + item.count, 0);
+  const cartTotal = cart.reduce(
+    (total, item) => total + item.product.price * item.count,
+    0,
+  );
 
   const createSlug = (title) => {
     return title
@@ -74,30 +91,53 @@ function Header() {
       if (shopRef.current && !shopRef.current.contains(event.target)) {
         setShopDropdownOpen(false);
       }
+      if (cartRef.current && !cartRef.current.contains(event.target)) {
+        setCartDropdownOpen(false);
+      }
     };
 
-    if (pagesDropdownOpen || authDropdownOpen || shopDropdownOpen) {
+    if (
+      pagesDropdownOpen ||
+      authDropdownOpen ||
+      shopDropdownOpen ||
+      cartDropdownOpen
+    ) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [pagesDropdownOpen, authDropdownOpen, shopDropdownOpen]);
+  }, [pagesDropdownOpen, authDropdownOpen, shopDropdownOpen, cartDropdownOpen]);
 
   useEffect(() => {
     setPagesDropdownOpen(false);
     setAuthDropdownOpen(false);
     setShopDropdownOpen(false);
+    setCartDropdownOpen(false); // YENİ
     setMobileMenuOpen(false);
-    setMobileShopOpen(false); // YENİ
-    setMobileUserOpen(false); // YENİ
+    setMobileShopOpen(false);
+    setMobileUserOpen(false);
   }, [location]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch(setUser({}));
     setMobileUserOpen(false);
+  };
+
+  // Sepet item güncelleme
+  const handleUpdateCount = (productId, newCount) => {
+    if (newCount <= 0) {
+      dispatch(removeFromCart(productId));
+    } else {
+      dispatch(updateCartItem(productId, newCount));
+    }
+  };
+
+  // Sepetten kaldırma
+  const handleRemoveItem = (productId) => {
+    dispatch(removeFromCart(productId));
   };
 
   return (
@@ -155,6 +195,7 @@ function Header() {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-[#737373]">
+            {/* ... mevcut nav linkleri (Home, Shop, About, Blog, Contact, Pages) ... */}
             <Link
               to="/"
               className="relative hover:text-[#252B42] transition-colors duration-300 group"
@@ -374,28 +415,317 @@ function Header() {
             )}
 
             <div className="flex items-center gap-4">
-              {[Search, ShoppingCart, Heart].map((Icon, index) => (
-                <Icon
-                  key={index}
-                  size={18}
-                  className="cursor-pointer hover:text-[#1a8fd4] hover:scale-110 hover:rotate-6 transition-all duration-300"
-                />
-              ))}
+              <Search
+                size={18}
+                className="cursor-pointer hover:text-[#1a8fd4] hover:scale-110 hover:rotate-6 transition-all duration-300"
+              />
+
+              {/* YENİ: ShoppingCart with Dropdown */}
+              <div className="relative" ref={cartRef}>
+                <button
+                  onClick={() => setCartDropdownOpen(!cartDropdownOpen)}
+                  className="relative cursor-pointer hover:text-[#1a8fd4] hover:scale-110 transition-all duration-300"
+                >
+                  <ShoppingCart size={18} />
+                  {cartItemCount > 0 && (
+                    <span className="absolute -top-2 -right-2 w-5 h-5 bg-[#E77C40] text-white text-xs font-bold rounded-full flex items-center justify-center animate-bounce">
+                      {cartItemCount}
+                    </span>
+                  )}
+                </button>
+
+                {/* Cart Dropdown */}
+                <div
+                  className={`absolute top-full right-0 mt-3 w-[380px] bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden transition-all duration-300 z-50 ${
+                    cartDropdownOpen
+                      ? "opacity-100 visible translate-y-0"
+                      : "opacity-0 invisible -translate-y-2 pointer-events-none"
+                  }`}
+                >
+                  {/* Header */}
+                  <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-gradient-to-r from-[#23A6F0]/5 to-transparent">
+                    <h3 className="font-bold text-[#252B42] flex items-center gap-2">
+                      <ShoppingCart size={18} className="text-[#23A6F0]" />
+                      Sepetim ({cartItemCount} Ürün)
+                    </h3>
+                    <button
+                      onClick={() => setCartDropdownOpen(false)}
+                      className="text-[#737373] hover:text-[#252B42] hover:rotate-90 transition-all duration-300 cursor-pointer"
+                    >
+                      <X size={20} />
+                    </button>
+                  </div>
+
+                  {/* Items */}
+                  <div className="max-h-[320px] overflow-y-auto">
+                    {cart.length === 0 ? (
+                      <div className="p-8 text-center">
+                        <ShoppingCart
+                          size={48}
+                          className="mx-auto text-gray-200 mb-3"
+                        />
+                        <p className="text-[#737373] text-sm">Sepetiniz boş</p>
+                        <Link
+                          to="/shop"
+                          onClick={() => setCartDropdownOpen(false)}
+                          className="inline-block mt-3 text-[#23A6F0] text-sm font-medium hover:underline"
+                        >
+                          Alışverişe Başla
+                        </Link>
+                      </div>
+                    ) : (
+                      cart.map((item) => (
+                        <div
+                          key={item.product.id}
+                          className="flex gap-3 p-4 border-b border-gray-50 hover:bg-gray-50 transition-colors group"
+                        >
+                          <img
+                            src={item.product.image}
+                            alt={item.product.name}
+                            className="w-16 h-16 object-cover rounded-lg bg-gray-100"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-sm font-bold text-[#252B42] truncate group-hover:text-[#23A6F0] transition-colors">
+                              {item.product.name}
+                            </h4>
+                            <p className="text-xs text-[#737373] mt-1">
+                              ${item.product.price} x {item.count}
+                            </p>
+
+                            {/* Count Controls */}
+                            <div className="flex items-center gap-2 mt-2">
+                              <button
+                                onClick={() =>
+                                  handleUpdateCount(
+                                    item.product.id,
+                                    item.count - 1,
+                                  )
+                                }
+                                className="w-6 h-6 rounded-full border border-gray-200 flex items-center justify-center text-[#737373] hover:border-[#23A6F0] hover:text-[#23A6F0] transition-colors cursor-pointer"
+                              >
+                                <Minus size={12} />
+                              </button>
+                              <span className="text-sm font-medium text-[#252B42] w-6 text-center">
+                                {item.count}
+                              </span>
+                              <button
+                                onClick={() =>
+                                  handleUpdateCount(
+                                    item.product.id,
+                                    item.count + 1,
+                                  )
+                                }
+                                className="w-6 h-6 rounded-full border border-gray-200 flex items-center justify-center text-[#737373] hover:border-[#23A6F0] hover:text-[#23A6F0] transition-colors cursor-pointer"
+                              >
+                                <Plus size={12} />
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Price & Remove */}
+                          <div className="flex flex-col items-end justify-between">
+                            <button
+                              onClick={() => handleRemoveItem(item.product.id)}
+                              className="text-gray-300 hover:text-red-500 transition-colors cursor-pointer"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                            <span className="text-sm font-bold text-[#23A6F0]">
+                              ${(item.product.price * item.count).toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  {/* Footer */}
+                  {cart.length > 0 && (
+                    <div className="p-4 border-t border-gray-100 bg-gray-50">
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-[#737373] text-sm">Toplam:</span>
+                        <span className="text-xl font-bold text-[#252B42]">
+                          ${cartTotal.toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <Link
+                          to="/cart"
+                          onClick={() => setCartDropdownOpen(false)}
+                          className="py-2.5 border-2 border-[#23A6F0] text-[#23A6F0] font-bold text-center rounded-lg hover:bg-[#23A6F0] hover:text-white transition-all duration-300 text-sm"
+                        >
+                          Sepete Git
+                        </Link>
+                        <Link
+                          to="/checkout"
+                          onClick={() => setCartDropdownOpen(false)}
+                          className="py-2.5 bg-[#23A6F0] text-white font-bold text-center rounded-lg hover:bg-[#1a8cd4] transition-all duration-300 text-sm"
+                        >
+                          Satın Al
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <Heart
+                size={18}
+                className="cursor-pointer hover:text-[#1a8fd4] hover:scale-110 hover:rotate-6 transition-all duration-300"
+              />
             </div>
           </div>
 
-          {/* Mobile Icons - YENİ DÜZEN */}
+          {/* Mobile Icons */}
+          {/* Mobile Icons */}
           <div className="flex md:hidden items-center gap-4 text-[#252B42]">
             <Search
               size={20}
               className="cursor-pointer hover:scale-110 transition-transform"
             />
-            <ShoppingCart
-              size={20}
-              className="cursor-pointer hover:scale-110 transition-transform"
-            />
 
-            {/* YENİ: Mobil kullanıcı profili */}
+            {/* Mobil Sepet - Dropdown */}
+            <div className="relative" ref={cartRef}>
+              <button
+                onClick={() => setCartDropdownOpen(!cartDropdownOpen)}
+                className="relative cursor-pointer hover:scale-110 transition-transform"
+              >
+                <ShoppingCart size={20} />
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 w-5 h-5 bg-[#E77C40] text-white text-xs font-bold rounded-full flex items-center justify-center">
+                    {cartItemCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Mobil Cart Dropdown */}
+              <div
+                className={`fixed top-[60px] left-0 right-0 bg-white shadow-xl border-b border-gray-100 overflow-hidden transition-all duration-300 z-50 ${
+                  cartDropdownOpen
+                    ? "max-h-[70vh] opacity-100"
+                    : "max-h-0 opacity-0 pointer-events-none"
+                }`}
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-gradient-to-r from-[#23A6F0]/5 to-transparent">
+                  <h3 className="font-bold text-[#252B42] flex items-center gap-2 text-sm">
+                    <ShoppingCart size={16} className="text-[#23A6F0]" />
+                    Sepetim ({cartItemCount} Ürün)
+                  </h3>
+                  <button
+                    onClick={() => setCartDropdownOpen(false)}
+                    className="text-[#737373] hover:text-[#252B42] transition-colors"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+
+                {/* Items */}
+                <div className="max-h-[50vh] overflow-y-auto p-4">
+                  {cart.length === 0 ? (
+                    <div className="text-center py-8">
+                      <ShoppingCart
+                        size={48}
+                        className="mx-auto text-gray-200 mb-3"
+                      />
+                      <p className="text-[#737373] text-sm">Sepetiniz boş</p>
+                      <button
+                        onClick={() => {
+                          setCartDropdownOpen(false);
+                          window.location.href = "/shop";
+                        }}
+                        className="mt-3 text-[#23A6F0] text-sm font-medium"
+                      >
+                        Alışverişe Başla
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {cart.map((item) => (
+                        <div
+                          key={item.product.id}
+                          className="flex gap-3 pb-4 border-b border-gray-50"
+                        >
+                          <img
+                            src={item.product.image}
+                            alt={item.product.name}
+                            className="w-16 h-16 object-cover rounded-lg bg-gray-100"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-sm font-bold text-[#252B42] truncate">
+                              {item.product.name}
+                            </h4>
+                            <p className="text-xs text-[#737373] mt-1">
+                              ${item.product.price}
+                            </p>
+                            <div className="flex items-center gap-2 mt-2">
+                              <button
+                                onClick={() =>
+                                  handleUpdateCount(
+                                    item.product.id,
+                                    item.count - 1,
+                                  )
+                                }
+                                className="w-6 h-6 rounded-full border border-gray-200 flex items-center justify-center text-[#737373]"
+                              >
+                                <Minus size={12} />
+                              </button>
+                              <span className="text-sm font-medium w-6 text-center">
+                                {item.count}
+                              </span>
+                              <button
+                                onClick={() =>
+                                  handleUpdateCount(
+                                    item.product.id,
+                                    item.count + 1,
+                                  )
+                                }
+                                className="w-6 h-6 rounded-full border border-gray-200 flex items-center justify-center text-[#737373]"
+                              >
+                                <Plus size={12} />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-end justify-between">
+                            <button
+                              onClick={() => handleRemoveItem(item.product.id)}
+                              className="text-gray-300 hover:text-red-500"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                            <span className="text-sm font-bold text-[#23A6F0]">
+                              ${(item.product.price * item.count).toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Footer */}
+                {cart.length > 0 && (
+                  <div className="p-4 border-t border-gray-100 bg-gray-50">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-[#737373] text-sm">Toplam:</span>
+                      <span className="text-lg font-bold text-[#252B42]">
+                        ${cartTotal.toFixed(2)}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setCartDropdownOpen(false);
+                        alert("Sipariş özelliği yakında!");
+                      }}
+                      className="w-full py-3 bg-[#23A6F0] text-white font-bold rounded-lg"
+                    >
+                      Satın Al
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
             {user.email ? (
               <button
                 onClick={() => setMobileUserOpen(!mobileUserOpen)}
@@ -418,7 +748,8 @@ function Header() {
             </button>
           </div>
         </div>
-        {/* YENİ: Mobil User Dropdown */}
+
+        {/* Mobile User Dropdown */}
         {mobileUserOpen && user.email && (
           <div className="md:hidden absolute top-full right-4 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden">
             <div className="p-4 bg-gradient-to-r from-[#23A6F0] to-[#1a8fd4] text-white">
@@ -477,7 +808,6 @@ function Header() {
               Home
             </Link>
 
-            {/* Shop - Ok işareti kaldırıldı */}
             <button
               onClick={() => setMobileShopOpen(!mobileShopOpen)}
               className="hover:text-[#252B42] hover:scale-105 transition-all duration-300"
@@ -485,12 +815,10 @@ function Header() {
               Shop
             </button>
 
-            {/* Shop Dropdown */}
             {mobileShopOpen && (
               <div className="w-full px-6 animate-fade-in">
                 <div className="bg-gray-50 rounded-lg p-4">
                   <div className="grid grid-cols-2 gap-4 text-left text-base">
-                    {/* Kadın */}
                     <div>
                       <h4 className="font-bold text-[#252B42] mb-3 text-base border-b border-gray-200 pb-2">
                         Kadın
@@ -509,7 +837,6 @@ function Header() {
                       </div>
                     </div>
 
-                    {/* Erkek */}
                     <div>
                       <h4 className="font-bold text-[#252B42] mb-3 text-base border-b border-gray-200 pb-2">
                         Erkek
@@ -554,7 +881,6 @@ function Header() {
               Contact
             </Link>
 
-            {/* Giriş yapılmamışsa Login/Register */}
             {!user.email ? (
               <div className="flex flex-col items-center gap-4 mt-2">
                 <Link

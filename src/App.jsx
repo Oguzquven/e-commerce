@@ -14,6 +14,7 @@ import TeamPage from "./pages/TeamPage";
 import AboutPage from "./pages/AboutPage";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
+import CartPage from "./pages/CartPage";
 
 // Auto login component - App açıldığında token ve kategorileri kontrol et
 function AutoLogin({ children }) {
@@ -43,11 +44,11 @@ function App() {
               <Route path="/about" element={<AboutPage />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/login" element={<Login />} />
-              {/* YENİ: Kategori route'u */}
               <Route
                 path="/shop/:gender/:categoryName/:categoryId"
                 element={<ShopPage />}
               />
+              <Route path="/cart" element={<CartPage />} />
             </Routes>
             <Footer />
           </div>

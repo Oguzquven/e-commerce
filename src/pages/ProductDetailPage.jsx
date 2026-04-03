@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "../store/actions/productActions";
+import { addToCart } from "../store/actions/shoppingCartActions"; // YENİ
 import BestsellerProducts from "../components/BestsellerProducts";
 import ClientsLogo from "../components/ClientLogos";
 import {
@@ -12,8 +13,8 @@ import {
   ShoppingCart,
   Eye,
   Star,
-  ArrowLeft,
-} from "lucide-react";
+  Check,
+} from "lucide-react"; // Check eklendi
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -27,6 +28,7 @@ const ProductDetail = () => {
   const [selectedColor, setSelectedColor] = useState(0);
   const [activeImage, setActiveImage] = useState(0);
   const [activeTab, setActiveTab] = useState("description");
+  const [addedToCart, setAddedToCart] = useState(false); // YENİ: Eklendi bildirimi
 
   // Ürünü çek
   useEffect(() => {
@@ -56,19 +58,17 @@ const ProductDetail = () => {
           onClick={() => navigate(-1)}
           className="px-8 py-3 bg-[#23A6F0] text-white font-bold rounded hover:bg-[#1a8cd4] transition-all flex items-center gap-2"
         >
-          <ArrowLeft className="w-5 h-5" />
           Back
         </button>
       </div>
     );
   }
 
-  // API verisini mevcut yapıya dönüştür (görüntü bozulmasın)
+  // API verisini mevcut yapıya dönüştür
   const product = {
     title: productDetail.name,
     newPrice: `$${productDetail.price}`,
     image: productDetail.images?.[0]?.url || productDetail.image,
-    // Eski yapıya uygun thumbnail'ler (aynı resim 3 kez)
     images:
       productDetail.images?.length > 1
         ? productDetail.images.map((img) => img.url)
@@ -89,6 +89,22 @@ const ProductDetail = () => {
     { id: "reviews", label: "Reviews (0)" },
   ];
 
+  // YENİ: Add to Cart handler
+  const handleAddToCart = () => {
+    const productToAdd = {
+      id: productDetail.id,
+      name: productDetail.name,
+      price: productDetail.price,
+      image: productDetail.images?.[0]?.url || productDetail.image,
+    };
+
+    dispatch(addToCart(productToAdd, 1));
+
+    // Eklendi bildirimi göster
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
+  };
+
   const nextImage = () => {
     setActiveImage((prev) => (prev + 1) % product.images.length);
   };
@@ -101,12 +117,10 @@ const ProductDetail = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#FAFAFA]">
-      {/* YENİ: Back Button (görev gereği) */}
-
-      {/* Product Detail Section - MEVCUT YAPI KORUNDU */}
+      {/* Product Detail Section */}
       <div className="min-h-[600px] lg:h-[calc(100vh-110px)] w-full mx-auto px-4 sm:px-6 lg:px-12 xl:px-20 py-8 lg:py-0 flex items-center">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-20 xl:gap-32 w-full items-center justify-center h-full">
-          {/* Left - Images - MEVCUT YAPI */}
+          {/* Left - Images */}
           <div className="w-full lg:w-[45%] xl:w-[40%] flex-shrink-0 flex flex-col justify-center h-full">
             {/* Breadcrumb */}
             <div className="flex items-center gap-2 text-sm mb-4">
@@ -125,7 +139,7 @@ const ProductDetail = () => {
               </Link>
             </div>
 
-            {/* Main Image Carousel - MEVCUT YAPI */}
+            {/* Main Image Carousel */}
             <div className="relative w-full aspect-square lg:aspect-auto lg:h-[55vh] lg:h-[65vh] bg-white rounded-lg overflow-hidden shadow-sm group">
               <img
                 src={product.images[activeImage] || product.image}
@@ -133,7 +147,7 @@ const ProductDetail = () => {
                 className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
               />
 
-              {/* Navigation Arrows - MEVCUT YAPI */}
+              {/* Navigation Arrows */}
               <button
                 onClick={prevImage}
                 className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center text-[#BDBDBD] hover:text-[#252B42] hover:bg-white transition-all bg-white/80 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 duration-300"
@@ -148,7 +162,7 @@ const ProductDetail = () => {
               </button>
             </div>
 
-            {/* Thumbnail Images - MEVCUT YAPI */}
+            {/* Thumbnail Images */}
             <div className="flex gap-2 lg:gap-4 mt-4 justify-start">
               {(product.images.length > 1
                 ? product.images
@@ -173,14 +187,14 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          {/* Right - Product Info - MEVCUT YAPI KORUNDU */}
+          {/* Right - Product Info */}
           <div className="w-full lg:flex-1 lg:w-[45%] xl:w-[40%] lg:max-w-[600px] flex flex-col justify-center lg:h-[55vh] lg:h-[65vh]">
             {/* Title */}
             <h1 className="text-2xl lg:text-4xl font-bold text-[#252B42] mb-2">
               {product.title}
             </h1>
 
-            {/* Rating - MEVCUT YAPI */}
+            {/* Rating */}
             <div className="flex items-center gap-2 mb-4">
               <div className="flex items-center gap-0.5">
                 {[...Array(4)].map((_, i) => (
@@ -196,12 +210,12 @@ const ProductDetail = () => {
               </span>
             </div>
 
-            {/* Price - MEVCUT YAPI */}
+            {/* Price */}
             <div className="text-2xl lg:text-3xl font-bold text-[#252B42] mb-2">
               {product.newPrice}
             </div>
 
-            {/* Availability - MEVCUT YAPI */}
+            {/* Availability */}
             <div className="flex items-center gap-2 mb-4">
               <span className="text-[#737373] text-sm font-bold">
                 Availability :
@@ -209,13 +223,13 @@ const ProductDetail = () => {
               <span className="text-[#23A6F0] text-sm font-bold">In Stock</span>
             </div>
 
-            {/* Description - MEVCUT YAPI */}
+            {/* Description */}
             <p className="text-[#737373] text-sm leading-relaxed mb-6">
               {productDetail.description ||
                 "Met minim Mollie non desert Alamo est sit cliquey dolor do met sent. RELIT official consequent door ENIM RELIT Mollie. Excitation venial consequent sent nostrum met."}
             </p>
 
-            {/* Color Selection - MEVCUT YAPI */}
+            {/* Color Selection */}
             <div className="flex gap-3 mb-6">
               {colors.map((color, index) => (
                 <button
@@ -231,17 +245,41 @@ const ProductDetail = () => {
               ))}
             </div>
 
-            {/* Actions - MEVCUT YAPI */}
+            {/* Actions - GÜNCELLENDİ */}
             <div className="flex items-center gap-3 flex-wrap">
-              <button className="px-6 py-3 bg-[#23A6F0] text-white font-bold text-sm rounded hover:bg-[#1a8cd4] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
-                Select Options
+              {/* Add to Cart Button */}
+              <button
+                onClick={handleAddToCart}
+                className={`px-6 py-3 font-bold text-sm rounded transition-all duration-200 cursor-pointer flex items-center gap-2 ${
+                  addedToCart
+                    ? "bg-green-500 text-white"
+                    : "bg-[#23A6F0] text-white hover:bg-[#1a8cd4] hover:shadow-lg hover:-translate-y-0.5"
+                }`}
+              >
+                {addedToCart ? (
+                  <>
+                    <Check className="w-5 h-5" />
+                    Added!
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="w-5 h-5" />
+                    Add to Cart
+                  </>
+                )}
               </button>
+
               <button className="w-10 h-10 rounded-full border border-[#E8E8E8] flex items-center justify-center text-[#252B42] hover:border-[#23A6F0] hover:text-[#23A6F0] hover:bg-[#23A6F0]/5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer bg-white">
                 <Heart className="w-5 h-5" />
               </button>
-              <button className="w-10 h-10 rounded-full border border-[#E8E8E8] flex items-center justify-center text-[#252B42] hover:border-[#23A6F0] hover:text-[#23A6F0] hover:bg-[#23A6F0]/5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer bg-white">
+
+              <button
+                onClick={handleAddToCart}
+                className="w-10 h-10 rounded-full border border-[#E8E8E8] flex items-center justify-center text-[#252B42] hover:border-[#23A6F0] hover:text-[#23A6F0] hover:bg-[#23A6F0]/5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer bg-white"
+              >
                 <ShoppingCart className="w-5 h-5" />
               </button>
+
               <button className="w-10 h-10 rounded-full border border-[#E8E8E8] flex items-center justify-center text-[#252B42] hover:border-[#23A6F0] hover:text-[#23A6F0] hover:bg-[#23A6F0]/5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer bg-white">
                 <Eye className="w-5 h-5" />
               </button>
@@ -250,7 +288,7 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      {/* Tabs Section - MEVCUT YAPI KORUNDU */}
+      {/* Tabs Section */}
       <div className="bg-white">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between lg:justify-center lg:gap-8 border-b border-[#ECECEC]">
