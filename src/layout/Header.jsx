@@ -1,6 +1,6 @@
 // src/layout/Header.jsx
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Phone,
@@ -38,6 +38,7 @@ function Header() {
   const [scrolled, setScrolled] = useState(false);
 
   const location = useLocation();
+  const navigate = useNavigate();
   const pagesRef = useRef(null);
   const authRef = useRef(null);
   const shopRef = useRef(null);
@@ -549,20 +550,24 @@ function Header() {
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
-                        <Link
-                          to="/cart"
-                          onClick={() => setCartDropdownOpen(false)}
-                          className="py-2.5 border-2 border-[#23A6F0] text-[#23A6F0] font-bold text-center rounded-lg hover:bg-[#23A6F0] hover:text-white transition-all duration-300 text-sm"
+                        <button
+                          onClick={() => {
+                            setCartDropdownOpen(false);
+                            navigate("/cart");
+                          }}
+                          className="py-2.5 border-2 border-[#23A6F0] text-[#23A6F0] font-bold text-center rounded-lg hover:bg-[#23A6F0] hover:text-white transition-all duration-300 text-sm cursor-pointer"
                         >
                           Sepete Git
-                        </Link>
-                        <Link
-                          to="/checkout"
-                          onClick={() => setCartDropdownOpen(false)}
-                          className="py-2.5 bg-[#23A6F0] text-white font-bold text-center rounded-lg hover:bg-[#1a8cd4] transition-all duration-300 text-sm"
+                        </button>
+                        <button
+                          onClick={() => {
+                            setCartDropdownOpen(false);
+                            navigate("/cart");
+                          }}
+                          className="py-2.5 bg-[#23A6F0] text-white font-bold text-center rounded-lg hover:bg-[#1a8cd4] transition-all duration-300 text-sm cursor-pointer"
                         >
                           Satın Al
-                        </Link>
+                        </button>
                       </div>
                     </div>
                   )}
@@ -577,154 +582,24 @@ function Header() {
           </div>
 
           {/* Mobile Icons */}
-          {/* Mobile Icons */}
           <div className="flex md:hidden items-center gap-4 text-[#252B42]">
             <Search
               size={20}
               className="cursor-pointer hover:scale-110 transition-transform"
             />
 
-            {/* Mobil Sepet - Dropdown */}
-            <div className="relative" ref={cartRef}>
-              <button
-                onClick={() => setCartDropdownOpen(!cartDropdownOpen)}
-                className="relative cursor-pointer hover:scale-110 transition-transform"
-              >
-                <ShoppingCart size={20} />
-                {cartItemCount > 0 && (
-                  <span className="absolute -top-2 -right-2 w-5 h-5 bg-[#E77C40] text-white text-xs font-bold rounded-full flex items-center justify-center">
-                    {cartItemCount}
-                  </span>
-                )}
-              </button>
-
-              {/* Mobil Cart Dropdown */}
-              <div
-                className={`fixed top-[60px] left-0 right-0 bg-white shadow-xl border-b border-gray-100 overflow-hidden transition-all duration-300 z-50 ${
-                  cartDropdownOpen
-                    ? "max-h-[70vh] opacity-100"
-                    : "max-h-0 opacity-0 pointer-events-none"
-                }`}
-              >
-                {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-gradient-to-r from-[#23A6F0]/5 to-transparent">
-                  <h3 className="font-bold text-[#252B42] flex items-center gap-2 text-sm">
-                    <ShoppingCart size={16} className="text-[#23A6F0]" />
-                    Sepetim ({cartItemCount} Ürün)
-                  </h3>
-                  <button
-                    onClick={() => setCartDropdownOpen(false)}
-                    className="text-[#737373] hover:text-[#252B42] transition-colors"
-                  >
-                    <X size={20} />
-                  </button>
-                </div>
-
-                {/* Items */}
-                <div className="max-h-[50vh] overflow-y-auto p-4">
-                  {cart.length === 0 ? (
-                    <div className="text-center py-8">
-                      <ShoppingCart
-                        size={48}
-                        className="mx-auto text-gray-200 mb-3"
-                      />
-                      <p className="text-[#737373] text-sm">Sepetiniz boş</p>
-                      <button
-                        onClick={() => {
-                          setCartDropdownOpen(false);
-                          window.location.href = "/shop";
-                        }}
-                        className="mt-3 text-[#23A6F0] text-sm font-medium"
-                      >
-                        Alışverişe Başla
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {cart.map((item) => (
-                        <div
-                          key={item.product.id}
-                          className="flex gap-3 pb-4 border-b border-gray-50"
-                        >
-                          <img
-                            src={item.product.image}
-                            alt={item.product.name}
-                            className="w-16 h-16 object-cover rounded-lg bg-gray-100"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-bold text-[#252B42] truncate">
-                              {item.product.name}
-                            </h4>
-                            <p className="text-xs text-[#737373] mt-1">
-                              ${item.product.price}
-                            </p>
-                            <div className="flex items-center gap-2 mt-2">
-                              <button
-                                onClick={() =>
-                                  handleUpdateCount(
-                                    item.product.id,
-                                    item.count - 1,
-                                  )
-                                }
-                                className="w-6 h-6 rounded-full border border-gray-200 flex items-center justify-center text-[#737373]"
-                              >
-                                <Minus size={12} />
-                              </button>
-                              <span className="text-sm font-medium w-6 text-center">
-                                {item.count}
-                              </span>
-                              <button
-                                onClick={() =>
-                                  handleUpdateCount(
-                                    item.product.id,
-                                    item.count + 1,
-                                  )
-                                }
-                                className="w-6 h-6 rounded-full border border-gray-200 flex items-center justify-center text-[#737373]"
-                              >
-                                <Plus size={12} />
-                              </button>
-                            </div>
-                          </div>
-                          <div className="flex flex-col items-end justify-between">
-                            <button
-                              onClick={() => handleRemoveItem(item.product.id)}
-                              className="text-gray-300 hover:text-red-500"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                            <span className="text-sm font-bold text-[#23A6F0]">
-                              ${(item.product.price * item.count).toFixed(2)}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Footer */}
-                {cart.length > 0 && (
-                  <div className="p-4 border-t border-gray-100 bg-gray-50">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-[#737373] text-sm">Toplam:</span>
-                      <span className="text-lg font-bold text-[#252B42]">
-                        ${cartTotal.toFixed(2)}
-                      </span>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setCartDropdownOpen(false);
-                        alert("Sipariş özelliği yakında!");
-                      }}
-                      className="w-full py-3 bg-[#23A6F0] text-white font-bold rounded-lg"
-                    >
-                      Satın Al
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
+            {/* Mobil Sepet - Direkt /cart sayfasına yönlendir */}
+            <Link
+              to="/cart"
+              className="relative cursor-pointer hover:scale-110 transition-transform"
+            >
+              <ShoppingCart size={20} />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-2 -right-2 w-5 h-5 bg-[#E77C40] text-white text-xs font-bold rounded-full flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
 
             {user.email ? (
               <button

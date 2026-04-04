@@ -7,12 +7,14 @@ import { createLogger } from "redux-logger";
 import clientReducer from "./reducers/clientReducer";
 import productReducer from "./reducers/productReducer";
 import shoppingCartReducer from "./reducers/shoppingCartReducer";
+import addressReducer from "./reducers/addressReducer"; // YENİ
 
 // Root Reducer
 const rootReducer = combineReducers({
   client: clientReducer,
   product: productReducer,
   shoppingCart: shoppingCartReducer,
+  address: addressReducer, // YENİ
 });
 
 // Middleware ve Enhancer

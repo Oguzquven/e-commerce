@@ -15,6 +15,8 @@ import AboutPage from "./pages/AboutPage";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import CartPage from "./pages/CartPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import CreateOrderPage from "./pages/CreateOrderPage";
 
 // Auto login component - App açıldığında token ve kategorileri kontrol et
 function AutoLogin({ children }) {
@@ -49,6 +51,14 @@ function App() {
                 element={<ShopPage />}
               />
               <Route path="/cart" element={<CartPage />} />
+              <Route
+                path="/create-order"
+                element={
+                  <ProtectedRoute>
+                    <CreateOrderPage />
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
             <Footer />
           </div>

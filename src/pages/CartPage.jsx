@@ -167,26 +167,35 @@ const CartPage = () => {
               ))}
             </div>
 
-            {/* Sipariş Özeti */}
+            {/* Sipariş Özeti - T19 Format */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24">
+              <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24 border border-gray-100">
                 <h2 className="text-xl font-bold text-[#252B42] mb-6">
                   Sipariş Özeti
                 </h2>
 
-                {/* Seçili Ürünler Özeti */}
-                <div className="space-y-3 mb-6">
+                {/* Detaylı Özet */}
+                <div className="space-y-4 mb-6">
                   <div className="flex justify-between text-[#737373]">
-                    <span>Seçili Ürünler ({selectedCount})</span>
-                    <span>${selectedTotal.toFixed(2)}</span>
+                    <span>Ürün Toplamı</span>
+                    <span className="font-medium text-[#252B42]">
+                      ${selectedTotal.toFixed(2)}
+                    </span>
                   </div>
+
                   <div className="flex justify-between text-[#737373]">
-                    <span>Kargo</span>
-                    <span className="text-green-500">Ücretsiz</span>
+                    <span>Kargo Toplamı</span>
+                    <span className="font-medium text-[#252B42]">$0.00</span>
                   </div>
+
+                  <div className="flex justify-between text-[#737373]">
+                    <span>150 TL ve Üzeri Kargo Bedava</span>
+                    <span className="text-green-500 font-medium">-$0.00</span>
+                  </div>
+
                   <div className="flex justify-between text-[#737373]">
                     <span>İndirim</span>
-                    <span className="text-red-500">-$0.00</span>
+                    <span className="text-red-500 font-medium">-$0.00</span>
                   </div>
                 </div>
 
@@ -201,16 +210,17 @@ const CartPage = () => {
                   </div>
                 </div>
 
+                {/* Sepeti Onayla Butonu */}
                 <button
-                  onClick={() => alert("Sipariş oluşturma yakında!")}
+                  onClick={() => alert("Sipariş onaylama yakında!")}
                   disabled={selectedCount === 0}
                   className={`w-full py-4 rounded-lg font-bold text-lg transition-all ${
                     selectedCount > 0
-                      ? "bg-[#23A6F0] text-white hover:bg-[#1a8cd4]"
+                      ? "bg-[#23A6F0] text-white hover:bg-[#1a8cd4] cursor-pointer"
                       : "bg-gray-200 text-gray-400 cursor-not-allowed"
                   }`}
                 >
-                  Sipariş Oluştur
+                  Sepeti Onayla ›
                 </button>
 
                 <p className="text-xs text-[#737373] text-center mt-4">
