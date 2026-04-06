@@ -6,6 +6,10 @@ import {
   UPDATE_CART_ITEM,
   SET_PAYMENT,
   SET_ADDRESS,
+  CREATE_ORDER_START,
+  CREATE_ORDER_SUCCESS,
+  CREATE_ORDER_FAILURE,
+  CLEAR_CART,
 } from "../actions/shoppingCartActions";
 
 // LocalStorage helper fonksiyonları (aynı dosyada)
@@ -27,9 +31,12 @@ const saveCartToStorage = (cart) => {
 };
 
 const initialState = {
-  cart: loadCartFromStorage(), // LocalStorage'dan yükle
+  cart: loadCartFromStorage(),
   payment: {},
   address: {},
+  loading: false,
+  error: null,
+  order: null,
 };
 
 const shoppingCartReducer = (state = initialState, action) => {
@@ -96,6 +103,27 @@ const shoppingCartReducer = (state = initialState, action) => {
 
     case SET_ADDRESS:
       return { ...state, address: action.payload };
+
+    // YENİ CASE'LER
+    case CREATE_ORDER_START:
+      return { ...state, loading: true, error: null };
+
+    case CREATE_ORDER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        order: action.payload,
+        cart: [],
+        payment: {},
+        address: {},
+      };
+
+    case CREATE_ORDER_FAILURE:
+      return { ...state, loading: false, error: action.payload };
+
+    case CLEAR_CART:
+      saveCartToStorage([]);
+      return { ...state, cart: [] };
 
     default:
       return state;

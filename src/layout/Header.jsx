@@ -20,6 +20,7 @@ import {
   Trash2,
   Plus,
   Minus,
+  Package,
 } from "lucide-react";
 import { setUser } from "../store/actions/clientActions";
 import {
@@ -34,7 +35,8 @@ function Header() {
   const [shopDropdownOpen, setShopDropdownOpen] = useState(false);
   const [mobileShopOpen, setMobileShopOpen] = useState(false);
   const [mobileUserOpen, setMobileUserOpen] = useState(false);
-  const [cartDropdownOpen, setCartDropdownOpen] = useState(false); // YENİ: Cart dropdown
+  const [cartDropdownOpen, setCartDropdownOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   const location = useLocation();
@@ -42,17 +44,17 @@ function Header() {
   const pagesRef = useRef(null);
   const authRef = useRef(null);
   const shopRef = useRef(null);
-  const cartRef = useRef(null); // YENİ: Cart ref
+  const cartRef = useRef(null);
+  const userMenuRef = useRef(null);
 
   const user = useSelector((state) => state.client.user);
   const categories = useSelector((state) => state.client.categories);
-  const { cart } = useSelector((state) => state.shoppingCart); // YENİ: Cart state
+  const { cart } = useSelector((state) => state.shoppingCart);
   const dispatch = useDispatch();
 
   const kadinCategories = categories.filter((cat) => cat.gender === "k");
   const erkekCategories = categories.filter((cat) => cat.gender === "e");
 
-  // Sepet hesaplamaları
   const cartItemCount = cart.reduce((total, item) => total + item.count, 0);
   const cartTotal = cart.reduce(
     (total, item) => total + item.product.price * item.count,
@@ -95,13 +97,17 @@ function Header() {
       if (cartRef.current && !cartRef.current.contains(event.target)) {
         setCartDropdownOpen(false);
       }
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setUserMenuOpen(false);
+      }
     };
 
     if (
       pagesDropdownOpen ||
       authDropdownOpen ||
       shopDropdownOpen ||
-      cartDropdownOpen
+      cartDropdownOpen ||
+      userMenuOpen
     ) {
       document.addEventListener("mousedown", handleClickOutside);
     }
@@ -109,13 +115,20 @@ function Header() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [pagesDropdownOpen, authDropdownOpen, shopDropdownOpen, cartDropdownOpen]);
+  }, [
+    pagesDropdownOpen,
+    authDropdownOpen,
+    shopDropdownOpen,
+    cartDropdownOpen,
+    userMenuOpen,
+  ]);
 
   useEffect(() => {
     setPagesDropdownOpen(false);
     setAuthDropdownOpen(false);
     setShopDropdownOpen(false);
-    setCartDropdownOpen(false); // YENİ
+    setCartDropdownOpen(false);
+    setUserMenuOpen(false);
     setMobileMenuOpen(false);
     setMobileShopOpen(false);
     setMobileUserOpen(false);
@@ -125,9 +138,9 @@ function Header() {
     localStorage.removeItem("token");
     dispatch(setUser({}));
     setMobileUserOpen(false);
+    setUserMenuOpen(false);
   };
 
-  // Sepet item güncelleme
   const handleUpdateCount = (productId, newCount) => {
     if (newCount <= 0) {
       dispatch(removeFromCart(productId));
@@ -136,7 +149,6 @@ function Header() {
     }
   };
 
-  // Sepetten kaldırma
   const handleRemoveItem = (productId) => {
     dispatch(removeFromCart(productId));
   };
@@ -196,7 +208,6 @@ function Header() {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-[#737373]">
-            {/* ... mevcut nav linkleri (Home, Shop, About, Blog, Contact, Pages) ... */}
             <Link
               to="/"
               className="relative hover:text-[#252B42] transition-colors duration-300 group"
@@ -344,38 +355,67 @@ function Header() {
           {/* Desktop Icons */}
           <div className="hidden md:flex items-center gap-6 text-[#23A6F0]">
             {user.email ? (
-              <div className="flex items-center gap-3 group/user">
-                <div className="relative cursor-pointer">
-                  <img
-                    src={
-                      user.gravatarUrl || "https://gravatar.com/avatar/?d=mp"
-                    }
-                    alt={user.name}
-                    className="w-9 h-9 rounded-full border-2 border-[#23A6F0] transition-all duration-300 group-hover/user:scale-110 group-hover/user:border-[#1a8fd4] object-cover"
-                  />
-                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white animate-pulse" />
-                  <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover/user:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none z-50">
-                    {user.email}
+              <div className="relative" ref={userMenuRef}>
+                <div
+                  className="flex items-center gap-3 group/user cursor-pointer"
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                >
+                  <div className="relative">
+                    <img
+                      src={
+                        user.gravatarUrl || "https://gravatar.com/avatar/?d=mp"
+                      }
+                      alt={user.name}
+                      className="w-9 h-9 rounded-full border-2 border-[#23A6F0] transition-all duration-300 group-hover/user:scale-110 object-cover"
+                    />
+                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white animate-pulse" />
                   </div>
+
+                  <span className="text-sm font-semibold text-[#252B42] group-hover/user:text-[#23A6F0] transition-colors duration-300 flex items-center gap-1">
+                    {user.name}
+                    <ChevronDown
+                      size={14}
+                      className={`transition-transform duration-300 ${userMenuOpen ? "rotate-180" : ""}`}
+                    />
+                  </span>
                 </div>
 
-                <span className="text-sm font-semibold text-[#252B42] group-hover/user:text-[#23A6F0] transition-colors duration-300 cursor-default">
-                  {user.name}
-                </span>
-
-                <button
-                  onClick={handleLogout}
-                  className="relative text-sm font-medium text-red-500 px-4 py-2 rounded-full overflow-hidden transition-all duration-300 cursor-pointer group/logout"
+                {/* Kullanıcı Dropdown Menüsü */}
+                <div
+                  className={`absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden transition-all duration-300 z-50 ${
+                    userMenuOpen
+                      ? "opacity-100 visible translate-y-0"
+                      : "opacity-0 invisible -translate-y-2 pointer-events-none"
+                  }`}
                 >
-                  <span className="absolute inset-0 bg-red-500 transform -translate-x-full group-hover/logout:translate-x-0 transition-transform duration-300 ease-out" />
-                  <span className="relative z-10 flex items-center gap-2 transition-colors duration-300 group-hover/logout:text-white">
-                    <LogOut
-                      size={14}
-                      className="transition-all duration-300 group-hover/logout:rotate-180"
-                    />
-                    Logout
-                  </span>
-                </button>
+                  <Link
+                    to="/orders"
+                    className="flex items-center gap-3 px-4 py-3 text-sm text-[#737373] hover:text-[#23A6F0] hover:bg-blue-50 transition-all duration-300"
+                    onClick={() => setUserMenuOpen(false)}
+                  >
+                    <Package size={16} />
+                    Siparişlerim
+                  </Link>
+                  <Link
+                    to="/profile"
+                    className="flex items-center gap-3 px-4 py-3 text-sm text-[#737373] hover:text-[#23A6F0] hover:bg-blue-50 transition-all duration-300"
+                    onClick={() => setUserMenuOpen(false)}
+                  >
+                    <User size={16} />
+                    Profilim
+                  </Link>
+                  <div className="border-t border-gray-100" />
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setUserMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:text-red-700 hover:bg-red-50 transition-all duration-300 text-left"
+                  >
+                    <LogOut size={16} />
+                    Çıkış Yap
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="relative" ref={authRef}>
@@ -421,7 +461,7 @@ function Header() {
                 className="cursor-pointer hover:text-[#1a8fd4] hover:scale-110 hover:rotate-6 transition-all duration-300"
               />
 
-              {/* YENİ: ShoppingCart with Dropdown */}
+              {/* ShoppingCart with Dropdown */}
               <div className="relative" ref={cartRef}>
                 <button
                   onClick={() => setCartDropdownOpen(!cartDropdownOpen)}

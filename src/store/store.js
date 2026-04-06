@@ -7,14 +7,18 @@ import { createLogger } from "redux-logger";
 import clientReducer from "./reducers/clientReducer";
 import productReducer from "./reducers/productReducer";
 import shoppingCartReducer from "./reducers/shoppingCartReducer";
-import addressReducer from "./reducers/addressReducer"; // YENİ
+import addressReducer from "./reducers/addressReducer";
+import cardReducer from "./reducers/cardReducer";
+import orderReducer from "./reducers/orderReducer"; // ✅ YENİ
 
 // Root Reducer
 const rootReducer = combineReducers({
   client: clientReducer,
   product: productReducer,
   shoppingCart: shoppingCartReducer,
-  address: addressReducer, // YENİ
+  address: addressReducer,
+  card: cardReducer,
+  order: orderReducer, // ✅ YENİ
 });
 
 // Middleware ve Enhancer

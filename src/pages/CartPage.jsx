@@ -1,7 +1,7 @@
 // src/pages/CartPage.jsx
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // useNavigate eklendi
 import {
   removeFromCart,
   updateCartItem,
@@ -10,6 +10,7 @@ import { Trash2, Plus, Minus, ShoppingCart, ArrowLeft } from "lucide-react";
 
 const CartPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // useNavigate hook'u eklendi
   const { cart } = useSelector((state) => state.shoppingCart);
 
   // Sadece seçili ürünlerin toplamı
@@ -41,9 +42,11 @@ const CartPage = () => {
     dispatch(removeFromCart(productId));
   };
 
-  const handleToggleCheck = (productId, currentChecked) => {
-    // checked durumunu değiştir - reducer'a yeni action eklememiz gerekir
-    // Şimdilik local state kullanalım, istersen reducer'a ekleriz
+  // Sepeti onayla - create-order sayfasına yönlendir
+  const handleConfirmCart = () => {
+    if (selectedCount > 0) {
+      navigate("/create-order");
+    }
   };
 
   return (
@@ -167,7 +170,7 @@ const CartPage = () => {
               ))}
             </div>
 
-            {/* Sipariş Özeti - T19 Format */}
+            {/* Sipariş Özeti */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24 border border-gray-100">
                 <h2 className="text-xl font-bold text-[#252B42] mb-6">
@@ -210,9 +213,9 @@ const CartPage = () => {
                   </div>
                 </div>
 
-                {/* Sepeti Onayla Butonu */}
+                {/* Sepeti Onayla Butonu - GÜNCELLENDİ */}
                 <button
-                  onClick={() => alert("Sipariş onaylama yakında!")}
+                  onClick={handleConfirmCart}
                   disabled={selectedCount === 0}
                   className={`w-full py-4 rounded-lg font-bold text-lg transition-all ${
                     selectedCount > 0
@@ -220,7 +223,7 @@ const CartPage = () => {
                       : "bg-gray-200 text-gray-400 cursor-not-allowed"
                   }`}
                 >
-                  Sepeti Onayla ›
+                  Sepeti Onayla
                 </button>
 
                 <p className="text-xs text-[#737373] text-center mt-4">

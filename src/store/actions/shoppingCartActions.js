@@ -8,6 +8,12 @@ export const UPDATE_CART_ITEM = "UPDATE_CART_ITEM";
 export const SET_PAYMENT = "SET_PAYMENT";
 export const SET_ADDRESS = "SET_ADDRESS";
 
+// YENİ SİPARİŞ ACTION TYPES
+export const CREATE_ORDER_START = "CREATE_ORDER_START";
+export const CREATE_ORDER_SUCCESS = "CREATE_ORDER_SUCCESS";
+export const CREATE_ORDER_FAILURE = "CREATE_ORDER_FAILURE";
+export const CLEAR_CART = "CLEAR_CART";
+
 // Action Creators
 
 // Sepeti direkt set et (API'den çekince vs.)
@@ -45,3 +51,56 @@ export const setAddress = (address) => ({
   type: SET_ADDRESS,
   payload: address,
 });
+
+// YENİ SİPARİŞ ACTION CREATORS
+export const createOrderStart = () => ({
+  type: CREATE_ORDER_START,
+});
+
+export const createOrderSuccess = (order) => ({
+  type: CREATE_ORDER_SUCCESS,
+  payload: order,
+});
+
+export const createOrderFailure = (error) => ({
+  type: CREATE_ORDER_FAILURE,
+  payload: error,
+});
+
+export const clearCart = () => ({
+  type: CLEAR_CART,
+});
+
+// THUNK - Sipariş oluşturma
+export const createOrder = (orderData) => async (dispatch) => {
+  dispatch(createOrderStart());
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(
+      "https://workintech-fe-ecommerce.onrender.com/order",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+        body: JSON.stringify(orderData),
+      },
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        errorData.message || "Sipariş oluşturulurken hata oluştu",
+      );
+    }
+
+    const data = await response.json();
+    dispatch(createOrderSuccess(data));
+    dispatch(clearCart());
+    return data;
+  } catch (error) {
+    dispatch(createOrderFailure(error.message));
+    throw error;
+  }
+};
